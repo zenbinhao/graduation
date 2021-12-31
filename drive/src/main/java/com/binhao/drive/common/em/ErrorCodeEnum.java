@@ -3,7 +3,7 @@ package com.binhao.drive.common.em;
 public enum ErrorCodeEnum {
     SUCCESS("0", "请求成功"),
     ERROR("1", "请求失败"),
-    NO_LOGIN("9", "未登录或会话超时，请重新登录！"),
+    NO_LOGIN("9", "未登录会话超时或在另一设备上已登录，请重新登录！"),
     BAD_REQUEST("400", "参数解析失败"),
     METHOD_NOT_ALLOWED("405", "不支持当前请求方法"),
     BUSINESS("1000", "业务异常"),

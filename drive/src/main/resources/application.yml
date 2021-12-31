@@ -1,8 +1,8 @@
 
 server:
-  port: 8080
+  port: 8088
   servlet:
-    context-path: /
+    context-path: /drive
 servlet:
   session:
     timeout: 86400

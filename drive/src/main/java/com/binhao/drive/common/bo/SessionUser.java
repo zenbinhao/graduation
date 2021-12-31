@@ -8,6 +8,8 @@ import java.io.Serializable;
 @Data
 public class SessionUser implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @ApiModelProperty("用户id")
     private String userId;
     @ApiModelProperty("认证id")

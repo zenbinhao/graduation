@@ -80,6 +80,9 @@ public class LoginServiceImpl extends ServiceImpl<AccountUserMapper, AccountUser
             SessionUser sessionUser = new SessionUser();
             BeanUtil.copy(userVO, sessionUser);
             sessionUser.setUserId(userVO.getId());
+            //单点登录  若不设置 即可多点登录  同时操作
+            cacheService.singleSign(userVO.getId());
+
             cacheService.setSessionCache(sessionUser.getAuthToken(),key,sessionUser);
             return userVO;
         }

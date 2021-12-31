@@ -2,7 +2,9 @@ package com.binhao.drive.common.service.impl;
 
 
 import com.binhao.drive.common.bo.CacheBean;
+import com.binhao.drive.common.bo.SessionUser;
 import com.binhao.drive.common.service.CacheService;
+import com.binhao.drive.common.util.SerializeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -86,10 +88,13 @@ public class CacheServiceImpl implements CacheService {
 
     public void setObj(String key, Object obj, Long seconds) {
         if (this.isStartRedis()) {
+            // 1.序列化 2.转json格式 再利用String方式储存
+            byte[] serialize = SerializeUtil.serialize(obj);
+            byte[] bytes = key.getBytes();
             if (seconds != null) {
-                this.redisTemplate.opsForValue().set(key, obj, seconds, TimeUnit.SECONDS);
+                this.redisTemplate.opsForValue().set(bytes, serialize, seconds, TimeUnit.SECONDS);
             } else {
-                this.redisTemplate.opsForValue().set(key, obj);
+                this.redisTemplate.opsForValue().set(bytes, serialize);
             }
         } else {
             Calendar calendar = Calendar.getInstance();
@@ -122,7 +127,9 @@ public class CacheServiceImpl implements CacheService {
     public Object getObj(String key) {
         if (key != null && !"".equals(key)) {
             if (this.isStartRedis()) {
-                return this.redisTemplate.opsForValue().get(key);
+                //反序列化SessionUser对象
+                Object obj = SerializeUtil.unSerialize((byte[]) this.redisTemplate.opsForValue().get(key.getBytes()));
+                return obj;
             } else {
                 CacheBean cacheBean = (CacheBean)mapCache.get(key);
                 if (cacheBean != null) {
@@ -173,6 +180,52 @@ public class CacheServiceImpl implements CacheService {
 
             return;
         }
+    }
+
+
+    /**
+     * @Author zengbh
+     * @Description //TODO 单点登录  清理之前登录的缓存  本地缓存版
+     * @Date 8:52
+     * @Param [userAccount]
+     * @return void
+     **/
+    public void singleSign(String userid){
+        //多余的SessionUser
+        List<String> unnecessary = new ArrayList();
+        if(this.isStartRedis()){
+            /* 本系统规模小不使用redis 但思路一定要有
+             * @Author zengbh
+             * @Description //TODO 思路：通过redis使用String（authToke+唯一性账号）,String（Json形式）的存储方法通过将以 唯一性账号为模糊查询到已登录的对象进行清除即可
+             * @Date 12:13
+             * @Param [userid]
+             * @return void
+             **/
+        }else {
+            /**
+             * @Author zengbh
+             * @Description //TODO 思路：服务器本地缓存hashMap转set集合  直接筛选判断userid若存在  即可把筛选列表循环弄掉
+             * @Date 16:29 
+             * @Param [userid]
+             * @return void
+             **/
+            //创建迭代器 map集合转化为Map.Entry对象集合
+            Iterator<Entry<String, CacheBean>> iterator = mapCache.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Entry<String, CacheBean> next = iterator.next();
+                SessionUser sessionUser = (SessionUser) next.getValue().getData();
+                //把已登录的筛选 放到集合中
+                if (sessionUser.getUserId().equals(userid)) {
+                    unnecessary.add(next.getKey());
+                }
+            }
+            //进行多余迭代SessionUser清除
+            Iterator<String> iterator1 = unnecessary.iterator();
+            while (iterator1.hasNext()) {
+                mapCache.remove(iterator1.next());
+            }
+        }
+        return;
     }
 
     public void setTimeOut(String key) {

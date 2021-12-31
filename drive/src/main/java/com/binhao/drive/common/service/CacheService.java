@@ -22,4 +22,6 @@ public interface CacheService {
     void setTimeOut(String var1);
 
     void cleanTimeout();
+
+     void singleSign(String userid);
 }
