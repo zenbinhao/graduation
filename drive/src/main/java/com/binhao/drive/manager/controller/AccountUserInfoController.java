@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @Api(
-        tags = {"管理端-会员管理"}
+        tags = {"管理端-学员管理"}
 )
 @RestController
 @RequestMapping("/userinfo")

@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @Api(
-        tags = {"管理端-会员管理"}
+        tags = {"管理端-学员管理"}
 )
 @RestController
 @RequestMapping("/user")
@@ -40,7 +40,7 @@ public class AccountUserController extends BaseController {
             checkPermission = true,
             checkEmployee = true
     )
-    @ApiOperation("重置密码 传会员信息、或者员工信息的fkUserId")
+    @ApiOperation("重置密码 通过fkUserId")
     @PutMapping({"/{id}"})
     public ResultVO reset(@PathVariable("id") String id) {
         accountUserService.reset(id);

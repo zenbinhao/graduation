@@ -14,5 +14,9 @@ public interface AccountUserService extends IService<AccountUser> {
 
     void updatePW(String password);
 
-    AccountUser insertEmployee(AccountUserDTO from);
+    AccountUser insertTeacher(AccountUserDTO from);
+
+    void deletes(String ids);
+
+    void updateData(AccountUserDTO formDTO);
 }

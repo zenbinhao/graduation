@@ -7,10 +7,13 @@ package com.binhao.drive.manager.dto;/*
 import com.binhao.drive.common.dto.BusinessFormDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @ApiModel(value = "AccountUserDTO",description = "用户注册表")
 public class AccountUserDTO extends BusinessFormDTO {
@@ -26,4 +29,5 @@ public class AccountUserDTO extends BusinessFormDTO {
     @NotBlank(message = "用户密码不能为空")
     @ApiModelProperty("用户密码")
     private String userPassword;
+
 }

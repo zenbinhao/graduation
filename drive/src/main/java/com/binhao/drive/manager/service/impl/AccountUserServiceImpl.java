@@ -12,13 +12,16 @@ import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.manager.dto.AccountUserDTO;
 import com.binhao.drive.manager.mapper.AccountUserMapper;
 import com.binhao.drive.manager.po.AccountUser;
+import com.binhao.drive.manager.po.Teacher;
 import com.binhao.drive.manager.service.AccountUserInfoService;
 import com.binhao.drive.manager.service.AccountUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+@Slf4j
 @Service
 public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, AccountUser> implements AccountUserService {
 
@@ -33,29 +36,12 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
 
     @Override
     public Integer insertAccount(AccountUserDTO from) {
+        //检查
+        String password = checkObject(from);
 
-        if (!from.getUserAccount().matches(ChangeType.PHONE_CHECK)){
-            throw new BusinessException(ErrorCodeEnum.PHONE_FORMAT);
-        }
-        //判断是否已存在该账号
-        AccountUser accountUser1 = accountUserMapper.selectOne(new QueryWrapper<AccountUser>().lambda().eq(AccountUser::getUserAccount, from.getUserAccount()).orderByDesc(AccountUser::getGmtCreate).last("limit 1"));
-        if(accountUser1!=null){
-            throw new BusinessException(ErrorCodeEnum.LOGIN_EXIST);
-        }
+        //type为0 无管理权限
+        AccountUser accountUser = this.propertySet(from,0,0,password);
 
-        String password= null;
-        try {
-            password = ChangeType.EncoderByMd5(from.getUserPassword());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        AccountUser accountUser = new AccountUser();
-        BeanUtil.copy(from,accountUser);
-        //默认激活
-        accountUser.setActiveStatus(0);
-        //默认无管理员权限
-        accountUser.setUserType(0);
-        accountUser.setUserPassword(password);
         accountUserMapper.insert(accountUser);
 
         //成功添加用户后，往扩展信息表中添加一条记录  形成一对一的关系
@@ -75,12 +61,7 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
 
     @Override
     public void reset(String id) {
-        String password = "123456";
-        try {
-            password = ChangeType.EncoderByMd5(password);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String password = this.checkPassword("123456");
         UpdateWrapper<AccountUser> accountUserUpdateWrapper = new UpdateWrapper<>();
         accountUserUpdateWrapper.lambda().set(AccountUser::getUserPassword,password).eq(AccountUser::getId,id);
         accountUserMapper.update(null, accountUserUpdateWrapper);
@@ -88,20 +69,58 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
 
     @Override
     public void updatePW(String password) {
-        try {
-            password = ChangeType.EncoderByMd5(password);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String passwordCheck = this.checkPassword(password);
         SessionUser sessionUser = authenticationService.getSessionUser();
         UpdateWrapper<AccountUser> accountUserUpdateWrapper = new UpdateWrapper<>();
-        accountUserUpdateWrapper.lambda().set(AccountUser::getUserPassword,password).eq(AccountUser::getId,sessionUser.getUserId());
+        accountUserUpdateWrapper.lambda().set(AccountUser::getUserPassword,passwordCheck).eq(AccountUser::getId,sessionUser.getUserId());
         accountUserMapper.update(null, accountUserUpdateWrapper);
 
     }
 
     @Override
-    public AccountUser insertEmployee(AccountUserDTO from) {
+    public AccountUser insertTeacher(AccountUserDTO from) {
+        //检查
+        String password = this.checkObject(from);
+        //员工权限 type 2   但本系统不需要教练员 管理
+        AccountUser accountUser = this.propertySet(from,0,0,password);
+
+        accountUserMapper.insert(accountUser);
+
+        return accountUser;
+    }
+
+    @Override
+    public void deletes(String ids) {
+        if (StringUtils.isEmpty(ids)) {
+            throw new BusinessException("请选择要删除的记录");
+        }
+        String []id =ids.split(",");
+        int row = accountUserMapper.deleteData(id);
+        if (row <=0|| ids.length()<=0) {
+            throw new BusinessException("批量删除操作失败");
+        }
+    }
+
+    @Override
+    public void updateData(AccountUserDTO formDTO) {
+        AccountUser accountUser = new AccountUser();
+        BeanUtil.copy(formDTO,accountUser);
+        accountUserMapper.updateById(accountUser);
+    }
+
+    //密码转化md5并捕获异常
+    private String checkPassword(String password){
+        try {
+            password = ChangeType.EncoderByMd5(password);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+        }
+        return password;
+    }
+
+    //冗余检查解决
+    private String checkObject(AccountUserDTO from){
         if (!from.getUserAccount().matches(ChangeType.PHONE_CHECK)){
             throw new BusinessException(ErrorCodeEnum.PHONE_FORMAT);
         }
@@ -110,26 +129,19 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
         if(accountUser1!=null){
             throw new BusinessException(ErrorCodeEnum.LOGIN_EXIST);
         }
+        String password= this.checkPassword(from.getUserPassword());
+        return password;
+    }
 
-        String password= null;
-        try {
-            password = ChangeType.EncoderByMd5(from.getUserPassword());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    //冗余属性赋值操作
+    private AccountUser propertySet(AccountUserDTO from,Integer status,Integer type,String password){
         AccountUser accountUser = new AccountUser();
         BeanUtil.copy(from,accountUser);
         //默认激活
-        accountUser.setActiveStatus(0);
+        accountUser.setActiveStatus(status);
         //赋予员工管理员权限
-        accountUser.setUserType(2);
+        accountUser.setUserType(type);
         accountUser.setUserPassword(password);
-        accountUserMapper.insert(accountUser);
-
-        //  员工省略步骤
-        //  成功添加用户后，往扩展信息表中添加一条记录  形成一对一的关系
-//        accountUserInfoService.insertData(accountUser.getId());
-
         return accountUser;
     }
 }
