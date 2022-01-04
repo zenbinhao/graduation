@@ -8,13 +8,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `drive_student`;
 CREATE TABLE `drive_student`  (
      `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键id',
-     `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '学员姓名',
-     `photo` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '学员照片路径',
-     `sfz` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '学员身份证',
-     `student_number` int(11) NOT NULL DEFAULT 0 COMMENT '学员数量',
-     `sex` tinyint(1) NOT NULL DEFAULT 0 COMMENT '性别默认0男,1女',
-     `sex` tinyint(1) NOT NULL DEFAULT 0 COMMENT '考试进度0科目一、1科目二、2科目三、3科目四、4已拿证',
      `fk_user_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '外键userid',
+     `fk_teacher_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '外键教练员teacher_id',
+     `picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '照片附件路径',
+     `sex` tinyint(1) NOT NULL DEFAULT 0 COMMENT '性别默认0男,1女',
+     `plan` tinyint(1) NOT NULL DEFAULT 0 COMMENT '考试进度0科目一、1科目二、2科目三、3科目四、4已拿证',
+     `card` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '学员身份证',
 
 
      `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除，0默认，1表示删除',

@@ -11,11 +11,11 @@ import lombok.Data;
 
 @ApiModel(value="AccountUserInfoQuery", description="会员信息表")
 @Data
-public class AccountUserInfoQuery extends PageQuery {
+public class StudentQuery extends PageQuery {
 
-    @ApiModelProperty("用户姓名")
+    @ApiModelProperty("学员姓名")
     private String userName;
 
-    @ApiModelProperty("用户账号（手机号）")
+    @ApiModelProperty("学员账号（手机号）")
     private String userAccount;
 }

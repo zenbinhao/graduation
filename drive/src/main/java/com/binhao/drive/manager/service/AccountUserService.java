@@ -6,7 +6,7 @@ import com.binhao.drive.manager.po.AccountUser;
 
 public interface AccountUserService extends IService<AccountUser> {
     //管理员添加
-    Integer insertAccount(AccountUserDTO from);
+    AccountUser insertAccount(AccountUserDTO from);
 
     void deleteData(String id);
 

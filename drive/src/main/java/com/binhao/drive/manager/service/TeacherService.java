@@ -5,7 +5,6 @@ import com.binhao.drive.manager.dto.TeacherDTO;
 import com.binhao.drive.manager.dto.TeacherInsertDTO;
 import com.binhao.drive.manager.po.Teacher;
 import com.binhao.drive.manager.query.TeacherQuery;
-import com.binhao.drive.manager.vo.AccountUserInfoVO;
 import com.binhao.drive.manager.vo.TeacherVO;
 import com.github.pagehelper.PageInfo;
 

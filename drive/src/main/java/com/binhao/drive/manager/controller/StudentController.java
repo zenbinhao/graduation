@@ -7,10 +7,10 @@ package com.binhao.drive.manager.controller;/*
 import com.binhao.drive.common.aop.AopOperation;
 import com.binhao.drive.common.controller.BaseController;
 import com.binhao.drive.common.vo.ResultVO;
-import com.binhao.drive.manager.dto.AccountUserInfoDTO;
-import com.binhao.drive.manager.query.AccountUserInfoQuery;
-import com.binhao.drive.manager.service.AccountUserInfoService;
-import com.binhao.drive.manager.vo.AccountUserInfoVO;
+import com.binhao.drive.manager.dto.StudentDTO;
+import com.binhao.drive.manager.query.StudentQuery;
+import com.binhao.drive.manager.service.StudentService;
+import com.binhao.drive.manager.vo.StudentVO;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,10 +24,10 @@ import javax.validation.Valid;
 )
 @RestController
 @RequestMapping("/userinfo")
-public class AccountUserInfoController extends BaseController {
+public class StudentController extends BaseController {
 
     @Resource
-    private AccountUserInfoService accountUserInfoService;
+    private StudentService studentService;
 
     @AopOperation(
             type = "分页查询",
@@ -35,8 +35,8 @@ public class AccountUserInfoController extends BaseController {
     )
     @ApiOperation("分页查询")
     @PostMapping({"/page"})
-    public ResultVO<PageInfo<AccountUserInfoVO>> pageDate(@RequestBody AccountUserInfoQuery query){
-        PageInfo info = accountUserInfoService.pageData(query);
+    public ResultVO<PageInfo<StudentVO>> pageDate(@RequestBody StudentQuery query){
+        PageInfo info = studentService.pageData(query);
         return this.success(info,"分页查询成功");
     }
 
@@ -46,23 +46,23 @@ public class AccountUserInfoController extends BaseController {
     )
     @ApiOperation("通过id查询")
     @GetMapping({"/{id}"})
-    public ResultVO<AccountUserInfoVO> selectById(@PathVariable String id) {
+    public ResultVO<StudentVO> selectById(@PathVariable String id) {
 
-        AccountUserInfoVO accountUserInfoVO = accountUserInfoService.selectById(id);
+        StudentVO accountUserInfoVO = studentService.selectById(id);
         return this.success(accountUserInfoVO, "查询id为:" + id + "用户成功");
     }
 
 
-//    @AopOperation(
-//            type = "新增",
-//            checkPermission = true
-//    )
-//    @ApiOperation("新增信息")
-//    @PostMapping({"/"})
-//    public ResultVO insertData(@Valid @RequestBody MealDTO form) {
-//        mealService.insertData(form);
-//        return this.success("新增信息成功");
-//    }
+    @AopOperation(
+            type = "新增",
+            checkPermission = true
+    )
+    @ApiOperation("新增信息")
+    @PostMapping({"/"})
+    public ResultVO insertData(@Valid @RequestBody StudentDTO form) {
+        studentService.insertData(form);
+        return this.success("新增信息成功");
+    }
 
     @AopOperation(
             type = "修改",
@@ -70,8 +70,8 @@ public class AccountUserInfoController extends BaseController {
     )
     @ApiOperation("修改信息")
     @PutMapping({"/"})
-    public ResultVO updateData(@Valid @RequestBody AccountUserInfoDTO form) {
-        accountUserInfoService.updateData(form);
+    public ResultVO updateData(@Valid @RequestBody StudentDTO form) {
+        studentService.updateData(form);
         return this.success("修改信息成功");
     }
 
@@ -82,7 +82,7 @@ public class AccountUserInfoController extends BaseController {
     @ApiOperation("根据ID删除")
     @DeleteMapping({"/{id}"})
     public ResultVO deleteData(@PathVariable("id") String id) {
-        accountUserInfoService.deleteData(id);
+        studentService.deleteData(id);
         return this.success("根据ID删除成功");
     }
 
@@ -93,7 +93,7 @@ public class AccountUserInfoController extends BaseController {
     @ApiOperation("通过fkUserId查询")
     @GetMapping({"/selectByFkUserId/{fkUserId}"})
     public ResultVO selectByFkUserId(@PathVariable("fkUserId") String id){
-        AccountUserInfoVO accountUserInfoVO = accountUserInfoService.selectByFkUserId(id);
+        StudentVO accountUserInfoVO = studentService.selectByFkUserId(id);
         return this.success(accountUserInfoVO,"查询fkUserId为:" + id + "用户成功");
     }
 

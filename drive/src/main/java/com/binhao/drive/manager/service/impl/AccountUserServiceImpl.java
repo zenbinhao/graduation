@@ -12,8 +12,6 @@ import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.manager.dto.AccountUserDTO;
 import com.binhao.drive.manager.mapper.AccountUserMapper;
 import com.binhao.drive.manager.po.AccountUser;
-import com.binhao.drive.manager.po.Teacher;
-import com.binhao.drive.manager.service.AccountUserInfoService;
 import com.binhao.drive.manager.service.AccountUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -29,13 +27,10 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
     private AccountUserMapper accountUserMapper;
 
     @Resource
-    private AccountUserInfoService accountUserInfoService;
-
-    @Resource
     private AuthenticationService authenticationService;
 
     @Override
-    public Integer insertAccount(AccountUserDTO from) {
+    public AccountUser insertAccount(AccountUserDTO from) {
         //检查
         String password = checkObject(from);
 
@@ -44,10 +39,7 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
 
         accountUserMapper.insert(accountUser);
 
-        //成功添加用户后，往扩展信息表中添加一条记录  形成一对一的关系
-        accountUserInfoService.insertData(accountUser.getId(),accountUser.getUserAccount());
-
-        return 0;
+        return accountUser;
     }
 
     @Override
