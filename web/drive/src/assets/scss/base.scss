@@ -1,0 +1,82 @@
+/* 滚动条 */
+::-webkit-scrollbar-thumb:horizontal { /*水平滚动条的样式*/
+    width: 4px;
+    background-color: #CCCCCC;
+    -webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-track-piece {
+    background-color: #fff; /*滚动条的背景颜色*/
+    -webkit-border-radius: 0; /*滚动条的圆角宽度*/
+}
+::-webkit-scrollbar {
+    width: 10px; /*滚动条的宽度*/
+    height: 8px; /*滚动条的高度*/
+}
+::-webkit-scrollbar-thumb:vertical { /*垂直滚动条的样式*/
+    height: 50px;
+    background-color: #999;
+    -webkit-border-radius: 4px;
+    outline: 2px solid #fff;
+    outline-offset: -2px;
+    border: 2px solid #fff;
+}
+::-webkit-scrollbar-thumb:hover { /*滚动条的hover样式*/
+    height: 50px;
+    background-color: #9f9f9f;
+    -webkit-border-radius: 4px;
+}
+html,body,#app{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  /*防止页面文字被选中*/
+  -moz-user-select:none;/*火狐*/
+  -webkit-user-select:none;/*webkit浏览器*/
+  -ms-user-select:none;/*IE10*/
+  -khtml-user-select:none;/*早期浏览器*/
+  user-select:none;
+}
+body{
+  font: 16px "microsoft yahei", Arial, Helvetica, sans-serif;
+  color: black;
+ }
+ ul,li,p,h1,h2,h3,h4,h5,h6,dl,dt,dd{
+   margin: 0;
+   padding: 0;
+   border: none;
+ }
+ a{
+   text-decoration: none;
+   text-shadow: none;
+   font-family: "微软雅黑";
+   color: #000;
+ }
+ ul{
+   list-style: none;
+ }
+ textarea,input{
+   outline: none;
+   -webkit-appearance: none;
+   font-family: "微软雅黑";
+ }
+ .fl{
+   float: left;
+ }
+ .fr{
+   float: right;
+ }
+ img{
+   border: none;
+ }
+ .clear{
+   clear: both;
+   height: 0;
+   overflow: hidden;
+ }
+ .font-color-w{
+   color: white;
+ }
+ .font-color-g{
+   color: #a0a0a0;
+ }

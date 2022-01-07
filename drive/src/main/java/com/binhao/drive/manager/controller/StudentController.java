@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @Api(
-        tags = {"管理端-学员管理"}
+        tags = {"管理端-学员信息管理"}
 )
 @RestController
 @RequestMapping("/userinfo")
@@ -70,19 +70,20 @@ public class StudentController extends BaseController {
     )
     @ApiOperation("修改信息")
     @PutMapping({"/"})
-    public ResultVO updateData(@Valid @RequestBody StudentDTO form) {
+    public ResultVO updateData(@RequestBody StudentDTO form) {
         studentService.updateData(form);
         return this.success("修改信息成功");
     }
 
     @AopOperation(
-            type = "单删",
+            type = "批量删除",
             checkPermission = true
     )
-    @ApiOperation("根据ID删除")
-    @DeleteMapping({"/{id}"})
-    public ResultVO deleteData(@PathVariable("id") String id) {
-        studentService.deleteData(id);
+    @ApiOperation("根据ID批量删除")
+    @DeleteMapping({"/{ids}"})
+    public ResultVO deleteData(@PathVariable("ids") String ids) {
+        System.out.println("ids=========================================="+ids);
+        studentService.deleteData(ids);
         return this.success("根据ID删除成功");
     }
 

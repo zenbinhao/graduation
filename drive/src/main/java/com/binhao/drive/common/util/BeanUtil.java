@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 public class BeanUtil {
     private static final Map<String, BeanCopier> BEAN_COPIERS = new HashMap();
 
-    public BeanUtil() {
+    private BeanUtil() {
     }
 
     public static void copy(Object srcObj, Object destObj) {

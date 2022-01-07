@@ -17,7 +17,7 @@ public interface StudentService extends IService<Student> {
 
     void updateData(StudentDTO formDTO);
 
-    void deleteData(String id);
+    void deleteData(String ids);
 
     StudentVO selectById(String id);
 

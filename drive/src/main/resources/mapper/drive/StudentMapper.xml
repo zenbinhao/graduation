@@ -5,7 +5,8 @@
     <select id="selectList" parameterType="com.binhao.drive.manager.query.StudentQuery"
     resultType="com.binhao.drive.manager.vo.StudentVO">
 
-        SELECT a.*,b.user_name,b.user_account FROM drive_student as a INNER JOIN drive_user as b on a.fk_user_id = b.id
+        SELECT a.*,b.user_name,b.user_account,c.`name` as 'teacher_name' FROM drive_student as a INNER JOIN drive_user as b on a.fk_user_id = b.id
+        Left join drive_teacher as c on c.id = a.fk_teacher_id
         WHERE a.is_deleted = 0 AND b.is_deleted = 0
         <if test="userName!=null and userName!=''">
         and b.user_name LIKE concat('%',#{userName},'%')
@@ -19,7 +20,8 @@
 
     <select id="selectById" parameterType="String"
             resultType="com.binhao.drive.manager.vo.StudentVO">
-        SELECT a.*,b.user_name,b.user_account FROM drive_student as a INNER JOIN drive_user as b on a.fk_user_id = b.id
+        SELECT a.*,b.user_name,b.user_account,c.`name` as 'teacher_name' FROM drive_student as a INNER JOIN drive_user as b on a.fk_user_id = b.id
+        Left join drive_teacher as c on c.id = a.fk_teacher_id
         WHERE a.is_deleted = 0 AND b.is_deleted = 0
         and a.id = #{id}
     </select>

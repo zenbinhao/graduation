@@ -71,7 +71,7 @@ public class TeacherController extends BaseController {
     )
     @ApiOperation("修改信息")
     @PutMapping({"/"})
-    public ResultVO updateData(@Valid @RequestBody TeacherDTO form) {
+    public ResultVO updateData(@RequestBody TeacherDTO form) {
         teacherService.updateData(form);
         return this.success("修改信息成功");
     }

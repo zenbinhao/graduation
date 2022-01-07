@@ -3,6 +3,7 @@ package com.binhao.drive.manager.po;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.binhao.drive.common.dto.BusinessFormDTO;
 import com.binhao.drive.common.po.BasePO;
+import com.binhao.drive.common.po.BusinessPO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -10,7 +11,7 @@ import lombok.Data;
 @TableName("drive_student")
 @ApiModel("学员信息表")
 @Data
-public class Student extends BusinessFormDTO {
+public class Student extends BusinessPO {
 
     @ApiModelProperty("外键user_id")
     private String fkUserId;

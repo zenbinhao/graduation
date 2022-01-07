@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import javax.validation.Valid;
 
 @Api(
-        tags = {"管理端-学员管理"}
+        tags = {"管理端-所有用户操作"}
 )
 @RestController
 @RequestMapping("/user")
@@ -26,14 +26,14 @@ public class AccountUserController extends BaseController {
     @Resource
     AccountUserService accountUserService;
 
-    @AopOperation(type = "添加用户",
-    checkPermission = true)
-    @ApiOperation("添加用户接口")
-    @PostMapping("/")
-    public ResultVO insertData(@Valid @RequestBody AccountUserDTO form) {
-        accountUserService.insertAccount(form);
-        return this.success("新增信息成功");
-    }
+//    @AopOperation(type = "添加用户",
+//    checkPermission = true)
+//    @ApiOperation("添加用户接口")
+//    @PostMapping("/")
+//    public ResultVO insertData(@Valid @RequestBody AccountUserDTO form) {
+//        accountUserService.insertAccount(form);
+//        return this.success("新增信息成功");
+//    }
 
     @AopOperation(
             type = "重置密码",

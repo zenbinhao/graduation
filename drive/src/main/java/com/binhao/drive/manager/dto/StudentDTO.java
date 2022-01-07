@@ -13,7 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Data
-@ApiModel(value="StudentDTO", description="学员信息表")
+@ApiModel(value="StudentInsertDTO", description="学员信息表单")
 public class StudentDTO extends BusinessFormDTO {
 
     @NotBlank(message = "用户姓名不能为空")
@@ -27,6 +27,7 @@ public class StudentDTO extends BusinessFormDTO {
     @NotBlank(message = "用户密码不能为空")
     @ApiModelProperty("用户密码")
     private String userPassword;
+
 //    业务中自动绑定  外键无需进行操作
 //    @NotBlank(message = "外键user_id不能为空")
 //    @ApiModelProperty("外键user_id")
@@ -49,7 +50,7 @@ public class StudentDTO extends BusinessFormDTO {
     @ApiModelProperty("身份证")
     private String card;
 
-    @NotNull(message = "考试进度不能为空")
-    @ApiModelProperty("考试进度（0科目一、1科目二、2科目三、3科目四、4已毕业）")
-    private Integer plan;
+//    @NotNull(message = "考试进度不能为空")
+//    @ApiModelProperty("考试进度（0科目一、1科目二、2科目三、3科目四、4已毕业）")
+//    private Integer plan;
 }

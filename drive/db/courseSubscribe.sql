@@ -5,12 +5,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- 预约课程信息
 -- ----------------------------
-DROP TABLE IF EXISTS `drive_courseSubscribe`;
-CREATE TABLE `drive_courseSubscribe`  (
+DROP TABLE IF EXISTS `drive_coursesubscribe`;
+CREATE TABLE `drive_coursesubscribe`  (
       `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键id',
-      `response_content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '教练员回应内容（排课时间）',
+      `response_content` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '教练员回应内容（排课时间）',
       `is_response` tinyint(1) NOT NULL DEFAULT 0 COMMENT '教练员是否回应(0未受理，1已回应)',
-      `fk_student_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '外键student_id',
+      `fk_user_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '外键user_id',
 
 
       `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除，0默认，1表示删除',
@@ -25,4 +25,4 @@ CREATE TABLE `drive_courseSubscribe`  (
       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-ALTER TABLE drive_courseSubscribe COMMENT '预约课程信息';
+ALTER TABLE drive_coursesubscribe COMMENT '预约课程信息';

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.binhao.drive.manager.mapper.ExamSubscribeMapper">
+
+    <select id="selectDataList" parameterType="com.binhao.drive.manager.query.ExamSubscribeQuery"
+            resultType="com.binhao.drive.manager.vo.ExamSubscribeVO">
+        select a.*,b.user_name,b.user_account from drive_examsubscribe as a inner join drive_user as b on a.fk_user_id = b.id
+        where a.is_deleted = 0 AND b.is_deleted = 0
+        <if test="userName!=null and userName!=''">
+            and b.user_name LIKE concat('%',#{userName},'%')
+        </if>
+        <if test="userAccount!=null and userAccount!=''">
+            and b.user_account LIKE concat('%',#{userAccount},'%')
+        </if>
+        order by a.gmt_create desc
+    </select>
+
+    <select id="selectDataById" parameterType="String"
+            resultType="com.binhao.drive.manager.vo.ExamSubscribeVO">
+        select a.*,b.user_name,b.user_account from drive_examsubscribe as a inner join drive_user as b on a.fk_user_id = b.id
+        where a.is_deleted = 0 AND b.is_deleted = 0
+          and id=#{id}
+    </select>
+
+</mapper>

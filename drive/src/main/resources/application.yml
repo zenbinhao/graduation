@@ -118,7 +118,7 @@ file:
   # 访问路径上的地址 localhost:8888/upload
   staticAccessPath: /upload/
   # 服务器本地路径
-  uploadFolder: /upload/
+  uploadFolder: E://upload/
   maxSize: 5MB
   countSize: 10MB
 

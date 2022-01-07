@@ -14,12 +14,16 @@ import com.binhao.drive.common.util.BeanUtil;
 import com.binhao.drive.common.util.ChangeType;
 import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.manager.dto.AccountUserDTO;
+import com.binhao.drive.manager.dto.PaymentDTO;
 import com.binhao.drive.manager.dto.StudentDTO;
 import com.binhao.drive.manager.mapper.AccountUserMapper;
 import com.binhao.drive.manager.mapper.StudentMapper;
 import com.binhao.drive.manager.po.AccountUser;
+import com.binhao.drive.manager.po.Payment;
 import com.binhao.drive.manager.po.Student;
+import com.binhao.drive.manager.po.Teacher;
 import com.binhao.drive.manager.query.StudentQuery;
+import com.binhao.drive.manager.service.PaymentService;
 import com.binhao.drive.manager.service.StudentService;
 import com.binhao.drive.manager.service.AccountUserService;
 import com.binhao.drive.manager.vo.StudentVO;
@@ -31,7 +35,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -49,6 +52,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Resource
     private AuthenticationService authenticationService;
+
+    @Resource
+    private PaymentService paymentService;
 
     @Override
     public PageInfo<StudentVO> pageData(StudentQuery query) {
@@ -70,12 +76,14 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     private void checkObject(StudentDTO formDTO){
-        if (!formDTO.getUserAccount().matches(ChangeType.PHONE_CHECK)){
-            throw new BusinessException(ErrorCodeEnum.PHONE_FORMAT);
-        }
-        AccountUser accountUser = accountUserMapper.selectOne(new QueryWrapper<AccountUser>().lambda().eq(AccountUser::getUserAccount, formDTO.getUserAccount()).orderByDesc(AccountUser::getGmtCreate).last("limit 1"));
-        if(accountUser!=null){
-            throw new BusinessException(ErrorCodeEnum.LOGIN_EXIST);
+        if(StringUtils.isNotEmpty(formDTO.getUserAccount())){
+            if (!formDTO.getUserAccount().matches(ChangeType.PHONE_CHECK)){
+                throw new BusinessException(ErrorCodeEnum.PHONE_FORMAT);
+            }
+            AccountUser accountUser = accountUserMapper.selectOne(new QueryWrapper<AccountUser>().lambda().eq(AccountUser::getUserAccount, formDTO.getUserAccount()).orderByDesc(AccountUser::getGmtCreate).last("limit 1"));
+            if(accountUser!=null){
+                throw new BusinessException(ErrorCodeEnum.LOGIN_EXIST);
+            }
         }
     }
     /**
@@ -90,7 +98,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         this.checkObject(formDTO);
         HashMap<String, Object> stringObjectHashMap = this.objectToMap(formDTO);
         SessionUser sessionUser = authenticationService.getSessionUser();
-        stringObjectHashMap.put("userPassword",this.checkPassword((String) stringObjectHashMap.get("userPassword")));
+        if(StringUtils.isNotEmpty(formDTO.getUserPassword())){
+            stringObjectHashMap.put("userPassword",this.checkPassword((String) stringObjectHashMap.get("userPassword")));
+        }
         stringObjectHashMap.put("updateUserId",sessionUser.getUserId());
         stringObjectHashMap.put("updateUserName",sessionUser.getUserName());
 
@@ -105,16 +115,27 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     @Override
-    public void deleteData(String id) {
-        StudentVO accountUserInfoVO = this.selectById(id);
-        if (StringUtils.isEmpty(id)) {
+    public void deleteData(String ids) {
+        if (StringUtils.isEmpty(ids)) {
             throw new BusinessException("请选择要删除的记录");
-        } else {
-            studentMapper.deleteById(id);
         }
-        String fkUserId = accountUserInfoVO.getFkUserId();
-        accountUserService.deleteData(fkUserId);
+        String[] id = ids.split(",");
+        int row = studentMapper.deleteData(id);
+        if (row <= 0 || ids.length() <= 0) {
+            throw new BusinessException("批量删除操作失败");
+        }
     }
+//    @Override
+//    public void deleteData(String ids) {
+//        StudentVO accountUserInfoVO = this.selectById(id);
+//        if (StringUtils.isEmpty(id)) {
+//            throw new BusinessException("请选择要删除的记录");
+//        } else {
+//            studentMapper.deleteById(id);
+//        }
+//        String fkUserId = accountUserInfoVO.getFkUserId();
+//        accountUserService.deleteData(fkUserId);
+//    }
 
     @Override
     public StudentVO selectById(String id) {
@@ -133,7 +154,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         Student student = new Student();
         BeanUtil.copy(studentDTO,student);
         student.setFkUserId(accountUser.getId());
+        student.setPlan(0);
         studentMapper.insert(student);
+
+        // 新增需确认的报名缴费信息
+        PaymentDTO paymentDTO = new PaymentDTO(accountUser.getId(),new Integer(2),new Integer(0),new Integer(0));
+        paymentService.insertData(paymentDTO);
     }
 
     @Override
