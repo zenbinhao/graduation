@@ -9,12 +9,10 @@
       <div>
         <el-button type="primary" @click="isAddShow=true">录入信息</el-button>
         <el-button type="danger" @click="deleteTableData()">批量删除</el-button>
-        <el-button type="info" @click="resetPwd()">重置密码</el-button>
       </div>
       <div class="operation-search">
         <el-button type="success" @click="getList()">显示所有</el-button>
-        <el-input v-model="search.name" placeholder="学员姓名回车搜索" @keydown.enter.native="searchList()"></el-input>
-        <el-input v-model="search.phone" placeholder="学员手机号回车搜索" @keydown.enter.native="searchList()"></el-input>
+        <el-input v-model="search.name" placeholder="姓名回车搜索" @keydown.enter.native="searchList()"></el-input>
       </div>
     </div>
 
@@ -37,28 +35,22 @@
       <!-- 下拉详情 -->
       <el-table-column
       type="expand">
-        <template slot-scope="scope">
+        <templat slot-scope="scope">
          <el-form label-position="right" inline class="demo-table-expand" label-width="90px">
             <el-form-item :label="obj[1]+':'" v-for="(obj,index) in tableHead" :key="index">
-              <img :src="scope.row[obj[0]]" v-if="index==4" class="listImg">
-              <span v-else-if="index==1">
+              <img :src="scope.row[obj[0]]" v-if="obj[0]=='photo'" class="listImg">
+             <span v-else-if="obj[0]=='sex'">
                 {{scope.row[obj[0]]==0?"男":"女" }}
               </span>
-              <span v-else-if="index==5">
-                {{planTableShow[scope.row[obj[0]]]}}
-              </span>
-              <span v-else-if="index==7||index==9">
+              <span v-else-if="obj[0]=='gmtCreate' || obj[0]=='gmtModified'">
                 {{scope.row[obj[0]] | formatDate}}
-              </span>
-              <span v-else-if="index==10">
-                {{scope.row[obj[0]]!=null && scope.row[obj[0]]!=''?scope.row[obj[0]]:'暂无'}}
               </span>
               <span v-else>
                 {{scope.row[obj[0]]}}
               </span>
             </el-form-item>
           </el-form>
-        </template>
+        </templat>
       </el-table-column>
      <el-table-column
         v-for="(obj,index) in tableHead" :key="index"
@@ -66,18 +58,12 @@
         :width="obj[2]"
         >
          <template slot-scope="scope">
-          <img :src="scope.row[obj[0]]" v-if="index==4" class="listImg">
-          <span v-else-if="index==1">
+          <img :src="scope.row[obj[0]]" v-if="obj[0]=='photo'" class="listImg">
+          <span v-else-if="obj[0]=='sex'">
             {{scope.row[obj[0]]==0?"男":"女" }}
           </span>
-          <span v-else-if="index==5">
-            {{planTableShow[scope.row[obj[0]]]}}
-          </span>
-          <span v-else-if="index==7||index==9">
+          <span v-else-if="obj[0]=='gmtCreate' || obj[0]=='gmtModified'">
             {{scope.row[obj[0]] | formatDate}}
-          </span>
-          <span v-else-if="index==10">
-            {{scope.row[obj[0]]!=null && scope.row[obj[0]]!=''?scope.row[obj[0]]:'暂无'}}
           </span>
           <span v-else>
             {{scope.row[obj[0]]}}
@@ -86,7 +72,7 @@
       </el-table-column>
      <el-table-column
         label="操作"
-        width="160">
+        width="140">
       <template slot-scope="scope">
 <!--        <el-button
           size="mini"
@@ -95,18 +81,10 @@
         <el-button
           size="mini"
           @click="updateStudent(scope.$index, scope.row)">修改</el-button>
-        <el-button
+<!--        <el-button
           size="mini"
           type="danger"
-          @click="chooseTeacher(scope.$index, scope.row,0)"
-          v-if="scope.row.teacherName==null || scope.row.teacherName==''"
-          >择师</el-button>
-          <el-button
-            size="mini"
-            type="warning"
-            @click="chooseTeacher(scope.$index, scope.row,1)"
-            v-else
-            >重选</el-button>
+          @click="chooseTeacher(scope.$index, scope.row)">择师</el-button> -->
       </template>
       </el-table-column>
     </el-table>
@@ -136,22 +114,22 @@
 
     <!-- 新增功能的抽屉 -->
     <el-drawer
-      title="学员信息录入"
+      title="教练员信息录入"
       :visible.sync="isAddShow"
       direction="ltr"
       size="40%"
       >
       <el-form class="addStudentform" :rules="rules" ref="addStudentForm" :model="add" label-width="110px">
-        <el-form-item prop="userName" label="学员姓名 :">
-          <el-input placeholder="请填写学员姓名" v-model="add.userName">
+        <el-form-item prop="name" label="教练员姓名 :">
+          <el-input placeholder="请填写教练员姓名" v-model="add.name">
           </el-input>
         </el-form-item>
-        <el-form-item prop="userAccount" label="手机号(账号) :">
-          <el-input placeholder="请填写学员手机号" v-model="add.userAccount">
+        <el-form-item prop="phone" label="手机号(账号) :">
+          <el-input placeholder="请填写教练员手机号" v-model="add.phone">
           </el-input>
         </el-form-item>
-        <el-form-item prop="userPassword" label="学员密码 :">
-          <el-input placeholder="请填写学员密码" v-model="add.userPassword" show-password>
+        <el-form-item prop="userPassword" label="教练员密码 :">
+          <el-input placeholder="请填写教练员密码" v-model="add.userPassword" show-password>
           </el-input>
         </el-form-item>
         <el-form-item label="性别 :" prop="sex">
@@ -160,20 +138,20 @@
               <el-radio :label="1">女</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item prop="card" label="身份证 :">
-          <el-input placeholder="请填身份证" v-model="add.card">
+        <el-form-item prop="age" label="年龄 :">
+          <el-input-number v-model="add.age"  :min="20" :max="70" ></el-input-number>
+        </el-form-item>
+        <el-form-item prop="introduction" label="简介 :">
+          <el-input
+            type="textarea"
+            placeholder="请输入简介内容"
+            maxlength="30"
+            show-word-limit
+            v-model="add.introduction"
+          >
           </el-input>
         </el-form-item>
-<!--        <el-form-item label="考试进度:" prop="plan">
-          <el-radio-group v-model="add.plan">
-            <el-radio-button :label="0">报名</el-radio-button>
-            <el-radio-button :label="1">科目一</el-radio-button>
-            <el-radio-button :label="3">科目二</el-radio-button>
-            <el-radio-button :label="2">科目三</el-radio-button>
-            <el-radio-button :label="4">科目四</el-radio-button>
-          </el-radio-group>
-        </el-form-item> -->
-      <el-form-item label="照片 :" prop="picture">
+      <el-form-item label="照片 :" prop="photo">
           <el-upload
             class="avatar-uploader"
             action="drive/file/upload"
@@ -186,7 +164,7 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <div class="pictureDisable">
-            <input v-model="add.picture" type="text"/>
+            <input v-model="add.photo" type="text"/>
           </div>
         </el-form-item>
         <el-form-item>
@@ -203,55 +181,55 @@
 
     <!-- 修改功能的抽屉 -->
         <el-drawer
-          title="学员信息修改"
+          title="教练员信息修改"
           :visible.sync="isAltShow"
           direction="rtl"
           size="40%"
           >
           <el-form class="addStudentform" :rules="rulesUpdate" ref="altStudentForm" :model="alt" label-width="110px">
-            <el-form-item prop="userName" label="学员姓名 :">
-              <el-input placeholder="请填写学员姓名" v-model="alt.userName">
-              </el-input>
-            </el-form-item>
-            <el-form-item prop="userAccount" label="手机号(账号) :">
-              <el-input placeholder="请填写学员手机号" v-model="alt.userAccount">
-              </el-input>
-            </el-form-item>
-            <el-form-item label="性别 :" prop="sex">
-                <el-radio-group v-model="alt.sex">
-                  <el-radio :label="0">男</el-radio>
-                  <el-radio :label="1">女</el-radio>
-                </el-radio-group>
-            </el-form-item>
-            <el-form-item prop="card" label="身份证 :">
-              <el-input placeholder="请填身份证" v-model="alt.card">
-              </el-input>
-            </el-form-item>
-    <!--        <el-form-item label="考试进度:" prop="plan">
-              <el-radio-group v-model="alt.plan">
-                <el-radio-button :label="0">报名</el-radio-button>
-                <el-radio-button :label="1">科目一</el-radio-button>
-                <el-radio-button :label="3">科目二</el-radio-button>
-                <el-radio-button :label="2">科目三</el-radio-button>
-                <el-radio-button :label="4">科目四</el-radio-button>
-              </el-radio-group>
-            </el-form-item> -->
-          <el-form-item label="照片 :" prop="picture">
-              <el-upload
-                class="avatar-uploader"
-                action="drive/file/upload"
-                :headers="headers"
-                :show-file-list="false"
-                :on-success="handleAvatarSuccess"
-                :before-upload="beforeAvatarUpload"
-                name="pictures">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
-              <div class="pictureDisable">
-                <input v-model="alt.picture" type="text"/>
-              </div>
-            </el-form-item>
+            <el-form-item prop="name" label="教练员姓名 :">
+                <el-input placeholder="请填写教练员姓名" v-model="alt.name">
+                </el-input>
+              </el-form-item>
+              <el-form-item prop="phone" label="手机号(账号) :">
+                <el-input placeholder="请填写教练员手机号" v-model="alt.phone">
+                </el-input>
+              </el-form-item>
+              <el-form-item label="性别 :" prop="sex">
+                  <el-radio-group v-model="alt.sex">
+                    <el-radio :label="0">男</el-radio>
+                    <el-radio :label="1">女</el-radio>
+                  </el-radio-group>
+              </el-form-item>
+              <el-form-item prop="age" label="年龄 :">
+                <el-input-number v-model="alt.age"  :min="20" :max="70" ></el-input-number>
+              </el-form-item>
+              <el-form-item prop="introduction" label="简介 :">
+                <el-input
+                  type="textarea"
+                  placeholder="请输入简介内容"
+                  maxlength="30"
+                  show-word-limit
+                  v-model="alt.introduction"
+                >
+                </el-input>
+              </el-form-item>
+            <el-form-item label="照片 :" prop="photo">
+                <el-upload
+                  class="avatar-uploader"
+                  action="drive/file/upload"
+                  :headers="headers"
+                  :show-file-list="false"
+                  :on-success="handleAvatarSuccess"
+                  :before-upload="beforeAvatarUpload"
+                  name="pictures">
+                  <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                  <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                </el-upload>
+                <div class="pictureDisable">
+                  <input v-model="alt.photo" type="text"/>
+                </div>
+              </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="altSubmitStudent('altStudentForm')">提交</el-button>
             </el-form-item>
@@ -262,31 +240,6 @@
 
 
 
-        <!--选择师傅的抽屉-->
-        <el-drawer
-          title="选择教练员"
-          :visible.sync="isChooseShow"
-          direction="ttb"
-          size="60%"
-          >
-            <ul class="infinite-list" v-infinite-scroll="load" style="overflow:auto">
-              <li v-for="i in foreachUse" class="infinite-list-item">
-                <div class="teacherIntroduce" v-for="index in 4" @click="chooseTeacherCheck(teacherData[(i-1)*4+index-1].id)">
-                    <el-image
-                      style="width: 100px;height: 100px;"
-                      v-show="((i-1)*4+index)<=teacherTotal"
-                      :src="((i-1)*4+index)>teacherTotal?'':teacherData[(i-1)*4+index-1].photo"
-                      id="anyel"
-                      @click.stop
-                      :preview-src-list="((i-1)*4+index)>teacherTotal?[]:srcList" lazy>
-                    </el-image>
-                  <p v-show="((i-1)*4+index)<=teacherTotal">{{ ((i-1)*4+index)>teacherTotal?'':teacherData[(i-1)*4+index-1].name}}</p>
-                  <p v-show="((i-1)*4+index)<=teacherTotal">{{ ((i-1)*4+index)>teacherTotal?'':teacherData[(i-1)*4+index-1].introduction}}</p>
-                </div>
-              </li>
-              <li v-show="isOver" class="infinite-list-item">已经没有更多了~~</li>
-            </ul>
-        </el-drawer>
   </div>
 </template>
 
@@ -300,13 +253,6 @@
         let phoneReg = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0-9]))\d{8}$/
         if (!phoneReg.test(value)) {
           return callback(new Error('手机号格式不正确'))
-        }
-        callback()
-      }
-      var validateCard = (rule, value, callback) => {
-        let cardReg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
-        if (!cardReg.test(value)) {
-          return callback(new Error('18位身份证格式不正确'))
         }
         callback()
       }
@@ -328,33 +274,28 @@
         srcList: ["http://localhost:8088/drive/upload/b9145826-fd8c-4d55-a192-2095272bb4f0.jpg"],
         isOver: false,
         search: {
-          name: null,
-          phone: null
+          name: null
         },
         tableData: [],
         action: {
-          selectList: "drive/userinfo/page",
-          addStudent: "drive/userinfo/",
-          deleteStudent: "/drive/userinfo/{ids}",
-          altStudent: "drive/userinfo/",
-          selectTeacherList: "drive/teacher/page",
-          chooseTeacher:"drive/userinfo/choose",
-          chooseReTeacher:"drive/userinfo/chooseRe",
-          resetPwd:"drive/userinfo/resetPwd/{ids}"
+          add: "drive/teacher/",
+          del: "drive/teacher/{ids}",
+          alt: "drive/teacher/",
+          list: "drive/teacher/page"
         },
         planTableShow:["科目一","科目二","科目三","科目四","已毕业"],
         tableHead:[
-          ["userName","姓名",90],
+          ["name","姓名",90],
           ["sex","性别",50],
-          ["userAccount","手机号",120],
-          ["card","身份证",200],
-          ["picture","照片",110],
-          ["plan","考试进度",100],
+          ["phone","手机号",120],
+          ["photo","照片",110],
+          ["age","年龄",50],
+          ["introduction","教练员简介",100],
+          ["studentNumber","总学员数量",100],
           ["createUserName","创建人",80],
           ["gmtCreate","创建时间",90],
           ["updateUserName","修改人",80],
           ["gmtModified","修改时间",90],
-          ["teacherName","教练姓名",80]
           // ["memo","备注"]
         ],
         pageNum:0,
@@ -364,7 +305,7 @@
         isAltShow: false,
         isChooseShow: false,
         rules: {
-          userName: [
+          name: [
             {required: true, message: '清输入姓名', tigger: 'blur'},
             { validator:validateName, trigger: 'blur'}
           ],
@@ -372,52 +313,52 @@
             {required: true, message: '清输入密码', tigger: 'blur'},
             { validator:validatePwd, trigger: 'blur'}
           ],
-          userAccount: [
+          phone: [
             {required: true, message: '清输入手机号', tigger: 'blur'},
             { validator: validatePhone, trigger: 'blur' }
           ],
-          card: [
-            {required: true, message: '清输入身份证', tigger: 'blur'},
-            { validator: validateCard, trigger: 'blur' }
+          introduction: [
+            {required: true, message: '清输入简介', tigger: 'blur'}
           ],
-          picture: [
+          photo: [
             {required: true, message: '清选择照片', tigger: 'blur'}
           ],
         },
         rulesUpdate: {
-          userName: [
+          name: [
             {required: true, message: '清输入姓名', tigger: 'blur'},
             { validator:validateName, trigger: 'blur'}
           ],
-          userAccount: [
+          phone: [
             {required: true, message: '清输入手机号', tigger: 'blur'},
             { validator: validatePhone, trigger: 'blur' }
           ],
-          card: [
-            {required: true, message: '清输入身份证', tigger: 'blur'},
-            { validator: validateCard, trigger: 'blur' }
+          introduction: [
+            {required: true, message: '清输入简介', tigger: 'blur'}
           ],
-          picture: [
+          photo: [
             {required: true, message: '清选择照片', tigger: 'blur'}
           ],
         },
         add:{
-          userName: 'a',
-          userAccount:'13387330000',
+          name: '隔壁老王',
+          phone:'13387330000',
           userPassword:'123456',
-          picture:'',
-          sex:0,
-          card:'430224199901130000',
+          photo:'',
+          sex: 0,
+          age: 30,
+          introduction:'简介',
         },
         alt:{
-          userName: '',
-          userAccount:'',
-          userPassword:'',
-          picture:'',
-          sex:0,
-          card:'',
-          version: 0,
-          id:''
+          name: null,
+          phone: null,
+          photo: null,
+          sex: null,
+          age: null,
+          introduction: null,
+          fkUserId: null,
+          version: null,
+          id:null
         },
         headers:{
           authToken:''
@@ -425,12 +366,6 @@
         imageUrl:'',
         ids:'',
         currentRowData:{},
-        count: 3,
-        teacherData: [],
-        teacherTotal: 0,
-        foreachUse: 0,
-        chooseDialog: 0,
-
       }
     },
     //方法函数存放
@@ -439,11 +374,10 @@
         this.headers.authToken = window.localStorage.getItem("authToken")
         let params={
           	pageNum: this.pageNum,
-          	pageSize: this.pageSize,
-            userName: this.search.name,
-            userAccount: this.search.phone
+            pageSize: this.pageSize,
+          	name: this.search.name
         }
-        axios.post(this.action.selectList,params,{
+        axios.post(this.action.list,params,{
           headers: {
             'authToken': this.headers.authToken
           }
@@ -477,8 +411,8 @@
       handleAvatarSuccess (res, file) {
         // 部署需修改
         this.imageUrl = URL.createObjectURL(file.raw)
-        this.add.picture = 'http://localhost:8088/drive' + (res.data).substring(3)
-        this.alt.picture = 'http://localhost:8088/drive' + (res.data).substring(3)
+        this.add.photo = 'http://localhost:8088/drive' + (res.data).substring(3)
+        this.alt.photo = 'http://localhost:8088/drive' + (res.data).substring(3)
       },
       altSubmitStudent (refName){
         this.$refs[refName].validate((valid) => {
@@ -488,17 +422,19 @@
             // console.log(this.currentRowData.picture)
             // console.log(this.currentRowData)
             let params ={
-              	card: this.alt.card==this.currentRowData.card?null:this.alt.card,
-              	picture: this.alt.picture==this.currentRowData.picture?null:this.alt.picture,
+              	name: this.alt.name==this.currentRowData.name?null:this.alt.name,
+              	photo: this.alt.photo==this.currentRowData.photo?null:this.alt.photo,
               	sex: this.alt.sex==this.currentRowData.sex?null:this.alt.sex,
-              	userAccount: this.alt.userAccount==this.currentRowData.userAccount?null:this.alt.userAccount,
-              	userName: this.alt.userName==this.currentRowData.userName?null:this.alt.userName,
+              	phone: this.alt.phone==this.currentRowData.phone?null:this.alt.phone,
+              	age: this.alt.age==this.currentRowData.age?null:this.alt.age,
+                introduction: this.alt.introduction==this.currentRowData.introduction?null:this.alt.introduction,
+                fkUserId: this.alt.fkUserId,
                 version: this.alt.version,
-                id: this.alt.id
+                id: this.alt.id,
             }
             console.log(params)
 
-            axios.put(this.action.altStudent,
+            axios.put(this.action.alt,
             params,{
               headers: {
                 'authToken': this.headers.authToken
@@ -527,15 +463,16 @@
         this.$refs[refName].validate((valid) => {
           if(valid){
             let params ={
-              	card: this.add.card,
-              	picture: this.add.picture,
+              	name: this.add.name,
+              	photo: this.add.photo,
+              	phone: this.add.phone,
+              	introduction: this.add.introduction,
               	sex: this.add.sex,
-              	userAccount: this.add.userAccount,
-              	userName: this.add.userName,
-              	userPassword: this.add.userPassword
+              	age: this.add.age,
+                userPassword: this.add.userPassword
             }
             console.log(params)
-            axios.post(this.action.addStudent,
+            axios.post(this.action.add,
             params,{
               headers: {
                 'authToken': this.headers.authToken
@@ -575,7 +512,7 @@
             confirmButtonText: '删除',
             cancelButtonText: '取消'
           }).then(() => {
-          axios.delete(this.action.deleteStudent.replace("{ids}",this.ids),{
+          axios.delete(this.action.del.replace("{ids}",this.ids),{
                 headers: {
                   'authToken': this.headers.authToken
                 }}).then(res=>{
@@ -602,25 +539,21 @@
           })
         }
       },
-      chooseTeacher(index, row, dialog) {
-        console.log(index, row);
-        this.isChooseShow=true
-        this.currentRowData = row
-        this.chooseDialog = dialog
-      },
       updateStudent(index, row) {
         this.isAltShow=true
-        this.imageUrl = row.picture
+        this.imageUrl = row.photo
         // console.log(row.picture)
         // 修改表单填充
         this.alt = {
-          userName: row.userName,
-          userAccount: row.userAccount,
-          picture: row.picture,
+          name: row.name,
+          phone: row.phone,
+          photo: row.photo,
           sex: row.sex,
-          card: row.card,
+          age: row.age,
           version: row.version,
-          id: row.id
+          id: row.id,
+          introduction: row.introduction,
+          fkUserId: row.fkUserId
         }
         // 存储当前修改行的数据
         this.currentRowData = row
@@ -634,131 +567,12 @@
           phone:null
         }
       },
-      load () {
-        // 20替换总条数
-        if(this.count< this.foreachUse){
-          this.count += 2
-        }else{
-          this.count = this.foreachUse
-          this.isOver = true
-        }
-      },
-      chooseTeacherCheck(id){
-        this.$confirm('是否绑定当前教练员？', '确定绑定？', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(() => {
-          let  params
-          // 为0的时候是 直接选择教练员
-          if(this.chooseDialog==0){
-          params= {
-              fkTeacherId: id,
-              id: this.currentRowData.id,
-              fkUserId: this.currentRowData.fkUserId,
-              version: this.currentRowData.version
-            }
-          }else{
-            //重选
-          params= {
-              fkTeacherId: id,
-              id: this.currentRowData.id,
-              fkUserId: this.currentRowData.fkUserId,
-              oldFkTeacherId:this.currentRowData.fkTeacherId,
-              version: this.currentRowData.version
-            }
-          }
-
-          // console.log(params)
-          axios.put(this.chooseDialog==0?this.action.chooseTeacher:this.action.chooseReTeacher,
-          params,{
-            headers: {
-              'authToken': this.headers.authToken
-            }
-          }).then(res =>{
-            if(res.data.code==='0'){
-              this.$message({
-                type: 'success',
-                message: res.data.message
-              })
-              this.isAltShow=false
-              this.getList()
-            }else{
-              this.$message({
-                type: 'error',
-                message: res.data.message
-              })
-            }
-          })
 
 
-
-          //关闭抽屉
-          this.isChooseShow = false
-        }).catch((err)=>{
-          return err;
-        })
-      },
-      getTeacherList(){
-        let params={
-          	pageNum: this.pageNum,
-          	pageSize: 100
-        }
-        axios.post(this.action.selectTeacherList,params,{
-          headers: {
-            'authToken': this.headers.authToken
-          }
-        }).then((res)=>{
-          // console.log(res.data.data.list)
-          // this.tableData=res.data.data.list
-          // this.total = res.data.data.total
-          this.teacherData= res.data.data.list
-          let arr = res.data.data.list
-          this.teacherTotal = res.data.data.total
-          this.foreachUse = Math.ceil(res.data.data.total/4)
-          let list = []
-          arr.forEach((obj,index)=>{
-            list.push(obj.photo)
-          })
-          this.srcList = list
-          // console.log(list)
-        })
-      },
-      resetPwd(){
-        this.$confirm('是否重置密码？', '确定重置？', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(() => {
-
-          axios.put(this.action.resetPwd.replace("{ids}",this.ids),null,
-          {
-            headers: {
-              'authToken': this.headers.authToken
-            }
-          }).then(res =>{
-            if(res.data.code==='0'){
-              this.$message({
-                type: 'success',
-                message: res.data.message
-              })
-              this.getList()
-            }else{
-              this.$message({
-                type: 'error',
-                message: res.data.message
-              })
-            }
-          })
-
-
-        }).catch(err=>{
-          return;
-        })
-      }
     },
     //页面加载时
     mounted() {
       this.getList()
-      this.getTeacherList()
     },
     //组件注册
     components: {

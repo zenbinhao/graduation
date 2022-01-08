@@ -7,6 +7,7 @@ package com.binhao.drive.manager.controller;/*
 import com.binhao.drive.common.aop.AopOperation;
 import com.binhao.drive.common.controller.BaseController;
 import com.binhao.drive.common.vo.ResultVO;
+import com.binhao.drive.manager.dto.ChooseTeacherDTO;
 import com.binhao.drive.manager.dto.StudentDTO;
 import com.binhao.drive.manager.query.StudentQuery;
 import com.binhao.drive.manager.service.StudentService;
@@ -98,5 +99,37 @@ public class StudentController extends BaseController {
         return this.success(accountUserInfoVO,"查询fkUserId为:" + id + "用户成功");
     }
 
+    @AopOperation(
+            type = "绑定教练员",
+            checkPermission = true
+    )
+    @ApiOperation("绑定教练员")
+    @PutMapping({"/choose"})
+    public ResultVO updateChooseTeacher(@RequestBody ChooseTeacherDTO formDTO) {
+        studentService.updateChooseTeacher(formDTO);
+        return this.success("成功绑定教练员");
+    }
+
+    @AopOperation(
+            type = "重选绑定教练员",
+            checkPermission = true
+    )
+    @ApiOperation("重选绑定教练员")
+    @PutMapping({"/chooseRe"})
+    public ResultVO updateChooseReTeacher(@RequestBody ChooseTeacherDTO formDTO) {
+        studentService.updateChooseReTeacher(formDTO);
+        return this.success("成功重选教练员");
+    }
+
+    @AopOperation(
+            type = "重置密码",
+            checkPermission = true
+    )
+    @ApiOperation("重置密码")
+    @PutMapping({"/resetPwd/{ids}"})
+    public ResultVO resetPwd(@PathVariable String ids){
+        studentService.resetPwd(ids);
+        return this.success("成功重置密码为123456");
+    }
 
 }

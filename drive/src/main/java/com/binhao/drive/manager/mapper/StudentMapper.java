@@ -23,4 +23,6 @@ public interface StudentMapper extends MapperCustom<Student> {
     Integer updateTwoTable(HashMap<String,Object> hashMap);
 
     Integer deleteData(@Param("ids") String[] ids);
+
+    void resetPwd(@Param("id") String i,@Param("pwd")String password);
 }

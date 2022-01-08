@@ -5,6 +5,7 @@ package com.binhao.drive.manager.service;/*
  */
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.binhao.drive.manager.dto.ChooseTeacherDTO;
 import com.binhao.drive.manager.dto.StudentDTO;
 import com.binhao.drive.manager.po.Student;
 import com.binhao.drive.manager.query.StudentQuery;
@@ -26,4 +27,10 @@ public interface StudentService extends IService<Student> {
     StudentVO selectByUserId();
 
     public StudentVO selectByFkUserId(String fkUserId);
+
+    void updateChooseTeacher(ChooseTeacherDTO formDTO);
+
+    void updateChooseReTeacher(ChooseTeacherDTO formDTO);
+
+    void resetPwd(String ids);
 }

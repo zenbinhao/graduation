@@ -52,7 +52,7 @@
             <if test="picture!=null and picture!=''">
                 b.picture = #{picture},
             </if>
-            <if test="fkTeacherId!=null">
+            <if test="sex!=null">
                 b.sex = #{sex},
             </if>
             <if test="card!=null and card!=''">
@@ -82,5 +82,13 @@
           <foreach collection="ids" index="index" item="item" open="(" separator="," close=")">
               #{item}
           </foreach>
+    </update>
+
+    <update id="resetPwd" parameterType="String">
+        UPDATE drive_student as b inner JOIN drive_user as a on a.id = b.fk_user_id
+        set a.user_password = #{pwd},
+            b.version = b.version+1,
+            b.gmt_modified= CURRENT_TIMESTAMP
+        where b.id = #{id}
     </update>
 </mapper>

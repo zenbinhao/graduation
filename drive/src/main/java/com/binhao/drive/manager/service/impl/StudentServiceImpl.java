@@ -6,18 +6,23 @@ package com.binhao.drive.manager.service.impl;/*
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.binhao.drive.common.bo.SessionUser;
 import com.binhao.drive.common.em.ErrorCodeEnum;
+import com.binhao.drive.common.po.BasePO;
 import com.binhao.drive.common.service.AuthenticationService;
 import com.binhao.drive.common.util.BeanUtil;
 import com.binhao.drive.common.util.ChangeType;
 import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.manager.dto.AccountUserDTO;
+import com.binhao.drive.manager.dto.ChooseTeacherDTO;
 import com.binhao.drive.manager.dto.PaymentDTO;
 import com.binhao.drive.manager.dto.StudentDTO;
 import com.binhao.drive.manager.mapper.AccountUserMapper;
+import com.binhao.drive.manager.mapper.PaymentMapper;
 import com.binhao.drive.manager.mapper.StudentMapper;
+import com.binhao.drive.manager.mapper.TeacherMapper;
 import com.binhao.drive.manager.po.AccountUser;
 import com.binhao.drive.manager.po.Payment;
 import com.binhao.drive.manager.po.Student;
@@ -55,6 +60,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
 
     @Resource
     private PaymentService paymentService;
+
+    @Resource
+    private PaymentMapper paymentMapper;
+
+    @Resource
+    private TeacherMapper teacherMapper;
 
     @Override
     public PageInfo<StudentVO> pageData(StudentQuery query) {
@@ -174,4 +185,59 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         StudentVO accountUserInfoVO = studentMapper.selectByUserId(fkUserId);
         return accountUserInfoVO;
     }
+
+    @Override
+    public void updateChooseTeacher(ChooseTeacherDTO formDTO) {
+        //首先判断报名费是否通过确认已缴费
+        QueryWrapper<Payment> paymentQueryWrapper = new QueryWrapper<>();
+        paymentQueryWrapper.lambda().eq(Payment::getContent,0).eq(Payment::getFkUserId,formDTO.getFkUserId()).eq(Payment::getIsCheck,1);
+        Integer integer = paymentMapper.selectCount(paymentQueryWrapper);
+        if (integer<1){
+            throw new BusinessException("5110","报名费未确认已收缴，无法绑定教练员");
+        }
+
+        //选择后教练员人数加1
+        teacherMapper.update(null,new UpdateWrapper<Teacher>().lambda().setSql("student_number=student_number+1").eq(BasePO::getId,formDTO.getFkTeacherId()));
+
+        //最后进行教练员绑定
+        Student student = new Student();
+        student.setVersion(formDTO.getVersion());
+        student.setId(formDTO.getId());
+        student.setFkTeacherId(formDTO.getFkTeacherId());
+        studentMapper.updateById(student);
+    }
+
+    @Override
+    public void updateChooseReTeacher(ChooseTeacherDTO formDTO) {
+
+        //原教练人数减1
+        teacherMapper.update(null,new UpdateWrapper<Teacher>().lambda().setSql("student_number=student_number-1").eq(BasePO::getId,formDTO.getOldFkTeacherId()));
+
+        //新教练人数加1
+        teacherMapper.update(null,new UpdateWrapper<Teacher>().lambda().setSql("student_number=student_number+1").eq(BasePO::getId,formDTO.getFkTeacherId()));
+
+        //进行教练员绑定
+        Student student = new Student();
+        student.setVersion(formDTO.getVersion());
+        student.setId(formDTO.getId());
+        student.setFkTeacherId(formDTO.getFkTeacherId());
+        studentMapper.updateById(student);
+    }
+
+    @Override
+    public void resetPwd(String ids) {
+        if (StringUtils.isEmpty(ids)) {
+            throw new BusinessException("请选择要重置的对象");
+        }
+        String[] id = ids.split(",");
+        String password = this.checkPassword("123456");
+        for(String i:id){
+            System.out.println("=================================");
+            System.out.println(i);
+            System.out.println("=================================");
+            studentMapper.resetPwd(i,password);
+        }
+    }
+
+
 }

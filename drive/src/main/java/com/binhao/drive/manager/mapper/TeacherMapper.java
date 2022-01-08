@@ -9,5 +9,4 @@ import org.apache.ibatis.annotations.Param;
 public interface TeacherMapper extends MapperCustom<Teacher> {
 
     Integer deleteData(@Param("ids") String[] ids);
-
 }
