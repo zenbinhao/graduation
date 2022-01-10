@@ -43,4 +43,8 @@ public class TeacherDTO extends BusinessFormDTO {
     @NotBlank(message = "外键userid不能为空")
     @ApiModelProperty("外键userid")
     private String fkUserId;
+
+    @NotBlank(message = "邮箱不能为空")
+    @ApiModelProperty("邮箱")
+    private String email;
 }

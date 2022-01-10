@@ -47,12 +47,23 @@
         setTimeout(() => {
         axios.post(this.action.login,params).then((res)=>{
           if(res.data.code==0){
+
             this.$message({
               type: 'success',
               message: res.data.message
             })
             window.localStorage.setItem("authToken",res.data.data.authToken)
-            this.$router.push('/admin')
+
+            if(res.data.data.userType==1){
+              this.$router.push('/admin')
+            }else if(res.data.data.userType==0){
+              this.$router.push('/TheStudent')
+            }else if(res.data.data.userType==2){
+              this.$router.push('/TheTeacher')
+            }else{
+              alert("警告")
+            }
+
           }else{
             this.$message({
               type: 'error',
@@ -71,7 +82,16 @@
         }
         }).then((res)=>{
           if(res.data.code==0){
-            this.$router.push('/admin')
+            
+            if(res.data.data.userType==1){
+              this.$router.push('/admin')
+            }else if(res.data.data.userType==0){
+              this.$router.push('/TheStudent')
+            }else if(res.data.data.userType==2){
+              this.$router.push('/TheTeacher')
+            }else{
+              alert("警告")
+            }
           }
         })
       }

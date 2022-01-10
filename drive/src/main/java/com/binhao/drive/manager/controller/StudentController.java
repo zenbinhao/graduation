@@ -132,4 +132,15 @@ public class StudentController extends BaseController {
         return this.success("成功重置密码为123456");
     }
 
+
+
+    @AopOperation(
+            type = "学员预约课程"
+    )
+    @ApiOperation("学员预约课程")
+    @PostMapping({"/insertCourseSub"})
+    public ResultVO insertSubscribeCourse() {
+        studentService.subscribeCourse(this.getSessionUser());
+        return this.success("学员预约课程成功,并发送邮箱通知其教练员");
+    }
 }

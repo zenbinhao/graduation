@@ -41,4 +41,7 @@ public class Teacher extends BusinessPO{
 
     @ApiModelProperty("教练员简介")
     private String introduction;
+
+    @ApiModelProperty("邮箱")
+    private String email;
 }

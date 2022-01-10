@@ -50,6 +50,10 @@ public class StudentDTO extends BusinessFormDTO {
     @ApiModelProperty("身份证")
     private String card;
 
+    @NotBlank(message = "邮箱不能为空")
+    @ApiModelProperty("邮箱")
+    private String email;
+
 //    @NotNull(message = "考试进度不能为空")
 //    @ApiModelProperty("考试进度（0科目一、1科目二、2科目三、3科目四、4已毕业）")
 //    private Integer plan;

@@ -43,4 +43,8 @@ public class TeacherInsertDTO extends BusinessFormDTO {
     @NotBlank(message = "用户密码不能为空")
     @ApiModelProperty("用户密码")
     private String userPassword;
+
+    @NotBlank(message = "邮箱不能为空")
+    @ApiModelProperty("邮箱")
+    private String email;
 }

@@ -18,4 +18,6 @@ public class SessionUser implements Serializable {
     private String userAccount;
     @ApiModelProperty("用户姓名")
     private String userName;
+    @ApiModelProperty("用户类型0普通用户，1超级管理员，2员工管理员")
+    private Integer userType;
 }

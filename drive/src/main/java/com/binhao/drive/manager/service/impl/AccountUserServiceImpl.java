@@ -74,7 +74,7 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
         //检查
         String password = this.checkObject(from);
         //员工权限 type 2   但本系统不需要教练员 管理
-        AccountUser accountUser = this.propertySet(from,0,0,password);
+        AccountUser accountUser = this.propertySet(from,0,2,password);
 
         accountUserMapper.insert(accountUser);
 
@@ -95,6 +95,18 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
 
     @Override
     public void updateData(AccountUserDTO formDTO) {
+
+        //校验账号 手机格式 以及 判重
+        if(StringUtils.isNotEmpty(formDTO.getUserAccount())){
+            if (!formDTO.getUserAccount().matches(ChangeType.PHONE_CHECK)){
+                throw new BusinessException(ErrorCodeEnum.PHONE_FORMAT);
+            }
+            AccountUser accountUser = accountUserMapper.selectOne(new QueryWrapper<AccountUser>().lambda().eq(AccountUser::getUserAccount, formDTO.getUserAccount()).orderByDesc(AccountUser::getGmtCreate).last("limit 1"));
+            if(accountUser!=null){
+                throw new BusinessException(ErrorCodeEnum.LOGIN_EXIST);
+            }
+        }
+
         AccountUser accountUser = new AccountUser();
         BeanUtil.copy(formDTO,accountUser);
         accountUserMapper.updateById(accountUser);
@@ -116,6 +128,7 @@ public class AccountUserServiceImpl extends ServiceImpl<AccountUserMapper, Accou
         if (!from.getUserAccount().matches(ChangeType.PHONE_CHECK)){
             throw new BusinessException(ErrorCodeEnum.PHONE_FORMAT);
         }
+
         //判断是否已存在该账号
         AccountUser accountUser1 = accountUserMapper.selectOne(new QueryWrapper<AccountUser>().lambda().eq(AccountUser::getUserAccount, from.getUserAccount()).orderByDesc(AccountUser::getGmtCreate).last("limit 1"));
         if(accountUser1!=null){

@@ -14,6 +14,7 @@ CREATE TABLE `drive_student`  (
      `sex` tinyint(1) NOT NULL DEFAULT 0 COMMENT '性别默认0男,1女',
      `plan` tinyint(1) NOT NULL DEFAULT 0 COMMENT '考试进度0科目一、1科目二、2科目三、3科目四、4已拿证',
      `card` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '学员身份证',
+     `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '邮箱',
 
 
      `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除，0默认，1表示删除',

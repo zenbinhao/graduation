@@ -30,7 +30,7 @@
          <span slot="title">记录认定</span>
        </template>
        <el-menu-item index="3-1" @click="routerToManager(4)">收费信息认定</el-menu-item>
-       <el-menu-item index="3-2">考试信息认定</el-menu-item>
+       <el-menu-item index="3-2" @click="routerToManager(5)">教练员排课记录</el-menu-item>
      </el-submenu>
      <el-submenu index="4">
        <template slot="title">
@@ -50,7 +50,7 @@
     //数据存放
     data() {
       return {
-        routerList:["/Home","/Student","/Teacher","","/Payment"],
+        routerList:["/Home","/Student","/Teacher","Exam","/Payment","/CourseRecord"],
       }
     },
     //方法函数存放

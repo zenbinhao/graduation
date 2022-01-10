@@ -6,7 +6,9 @@ package com.binhao.drive.manager.service.impl;/*
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.binhao.drive.common.em.ErrorCodeEnum;
 import com.binhao.drive.common.util.BeanUtil;
+import com.binhao.drive.common.util.ChangeType;
 import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.manager.dto.AccountUserDTO;
 import com.binhao.drive.manager.dto.TeacherDTO;
@@ -49,6 +51,12 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void insertData(TeacherInsertDTO formDTO) {
+        if(StringUtils.isNotEmpty(formDTO.getEmail())){
+            if(!formDTO.getEmail().matches(ChangeType.EMAIL_CHECK)){
+                throw new BusinessException(ErrorCodeEnum.EMAIL_FORMAT);
+            }
+        }
+
         AccountUserDTO accountUserDTO = new AccountUserDTO(formDTO.getName(),formDTO.getPhone(),formDTO.getUserPassword());
         AccountUser accountUser = accountUserService.insertTeacher(accountUserDTO);
 
@@ -88,19 +96,27 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
 
     @Override
     public void updateData(TeacherDTO formDTO) {
+        //判断一下邮箱格式
+        if(StringUtils.isNotEmpty(formDTO.getEmail())){
+            if(!formDTO.getEmail().matches(ChangeType.EMAIL_CHECK)){
+                throw new BusinessException(ErrorCodeEnum.EMAIL_FORMAT);
+            }
+        }
+
         AccountUserDTO accountUserDTO = new AccountUserDTO();
         if(StringUtils.isNotEmpty(formDTO.getName())){
             accountUserDTO.setUserName(formDTO.getName());
         }
-        if (StringUtils.isNotEmpty(formDTO.getPhoto())){
+        if (StringUtils.isNotEmpty(formDTO.getPhone())){
             accountUserDTO.setUserAccount(formDTO.getPhone());
         }
-        if (StringUtils.isNotEmpty(formDTO.getName())||StringUtils.isNotEmpty(formDTO.getPhoto())){
+        if (StringUtils.isNotEmpty(formDTO.getName())||StringUtils.isNotEmpty(formDTO.getPhone())){
             accountUserDTO.setId(formDTO.getFkUserId());
             accountUserService.updateData(accountUserDTO);
         }
         Teacher teacher = new Teacher();
         BeanUtil.copy(formDTO,teacher);
+        teacher.setFkUserId(null);
         teacherMapper.updateById(teacher);
     }
 

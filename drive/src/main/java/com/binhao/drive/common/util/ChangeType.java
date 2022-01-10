@@ -18,6 +18,7 @@ import java.util.*;
  */
 public class ChangeType {
     public static final String PHONE_CHECK= "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0-9]))\\d{8}$";
+    public static final String EMAIL_CHECK="^[0-9a-z]+\\w*@([0-9a-z]+\\.)+[0-9a-z]+$";
     // 用来全局控制 上一周，本周，下一周的周数变化
     private int weeks = 0;
     private int MaxDate;// 一月最大天数

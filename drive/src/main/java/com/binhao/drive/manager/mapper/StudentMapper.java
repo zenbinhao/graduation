@@ -25,4 +25,6 @@ public interface StudentMapper extends MapperCustom<Student> {
     Integer deleteData(@Param("ids") String[] ids);
 
     void resetPwd(@Param("id") String i,@Param("pwd")String password);
+
+    String selectTeacherPhone(@Param("id") String id);
 }

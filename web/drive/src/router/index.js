@@ -6,9 +6,12 @@ import Home from '@/views/level2/home'
 import Student from '@/views/level2/student.vue'
 import Teacher from '@/views/level2/teacher.vue'
 import Payment from '@/views/level2/payment.vue'
-
-
-
+import CourseRecord from '@/views/level2/courseRecord.vue'
+import Exam from '@/views/level2/exam.vue'
+import TheStudent from '@/views/H5Student.vue'
+import TheTeacher from '@/views/H5Teacher.vue'
+import Operation from '@/views/h5leve2/operation.vue'
+import Person from '@/views/h5leve2/person.vue'
 
 Vue.use(Router)
 
@@ -19,6 +22,29 @@ Router.prototype.push = function push (location) {
 
 export default new Router({
   routes: [
+    {
+      path: '/TheTeacher',
+      name: 'TheTeacher',
+      component: TheTeacher
+    },
+    {
+      path: '/TheStudent',
+      name: 'TheStudent',
+      component: TheStudent,
+      redirect: {name: 'Operation'},
+      children: [
+        {
+          path: '/Operation',
+          name: 'Operation',
+          component: Operation
+        },
+        {
+          path: '/Person',
+          name: 'Person',
+          component: Person
+        },
+        ]
+    },
     {
       path: '/',
       name: 'Login',
@@ -49,6 +75,16 @@ export default new Router({
           path: '/Payment',
           name: 'Payment',
           component: Payment
+        },
+        {
+          path: '/CourseRecord',
+          name: 'CourseRecord',
+          component: CourseRecord
+        },
+        {
+          path: '/Exam',
+          name: 'Exam',
+          component: Exam
         },
       ]
     },

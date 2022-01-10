@@ -26,4 +26,4 @@ CREATE TABLE `drive_examsubscribe`  (
       PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-ALTER TABLE drive_examsubscribe COMMENT '预约课程信息';
+ALTER TABLE drive_examsubscribe COMMENT '预约考试信息';

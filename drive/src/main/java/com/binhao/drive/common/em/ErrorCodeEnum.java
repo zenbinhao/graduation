@@ -49,7 +49,9 @@ public enum ErrorCodeEnum {
     AUTH_CODE_FAILURE("1040", "authCode已失效，DDUserId查询不到用户"),
     DD_ID_USER("1041", "未查询到绑定该钉钉账号的用户信息"),
     LOGIN_EXIST("1042", "帐号已存在"),
-    PHONE_FORMAT("1043", "账号不是手机号");
+    PHONE_FORMAT("1043", "手机号格式有误"),
+    EMAIL_FORMAT("1044", "邮箱格式有误");
+
     private String code;
     private String msg;
 

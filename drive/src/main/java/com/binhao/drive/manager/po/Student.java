@@ -31,4 +31,6 @@ public class Student extends BusinessPO {
     @ApiModelProperty("考试进度（0科目一、1科目二、2科目三、3科目四、4已毕业）")
     private Integer plan;
 
+    @ApiModelProperty("邮箱")
+    private String email;
 }

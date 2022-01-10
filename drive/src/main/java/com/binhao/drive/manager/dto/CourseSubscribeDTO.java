@@ -7,8 +7,12 @@ package com.binhao.drive.manager.dto;/*
 import com.binhao.drive.common.dto.BusinessFormDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @ApiModel(value = "CourseSubscribeDTO",description = "预约信息表单")
 @Data
 public class CourseSubscribeDTO extends BusinessFormDTO {

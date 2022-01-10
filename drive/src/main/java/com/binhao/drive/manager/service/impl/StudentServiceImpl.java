@@ -14,11 +14,9 @@ import com.binhao.drive.common.po.BasePO;
 import com.binhao.drive.common.service.AuthenticationService;
 import com.binhao.drive.common.util.BeanUtil;
 import com.binhao.drive.common.util.ChangeType;
+import com.binhao.drive.common.util.SendEmailUtil;
 import com.binhao.drive.common.vo.BusinessException;
-import com.binhao.drive.manager.dto.AccountUserDTO;
-import com.binhao.drive.manager.dto.ChooseTeacherDTO;
-import com.binhao.drive.manager.dto.PaymentDTO;
-import com.binhao.drive.manager.dto.StudentDTO;
+import com.binhao.drive.manager.dto.*;
 import com.binhao.drive.manager.mapper.AccountUserMapper;
 import com.binhao.drive.manager.mapper.PaymentMapper;
 import com.binhao.drive.manager.mapper.StudentMapper;
@@ -28,6 +26,7 @@ import com.binhao.drive.manager.po.Payment;
 import com.binhao.drive.manager.po.Student;
 import com.binhao.drive.manager.po.Teacher;
 import com.binhao.drive.manager.query.StudentQuery;
+import com.binhao.drive.manager.service.CourseSubscribeService;
 import com.binhao.drive.manager.service.PaymentService;
 import com.binhao.drive.manager.service.StudentService;
 import com.binhao.drive.manager.service.AccountUserService;
@@ -35,6 +34,7 @@ import com.binhao.drive.manager.vo.StudentVO;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -67,6 +67,9 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Resource
     private TeacherMapper teacherMapper;
 
+    @Resource
+    private CourseSubscribeService courseSubscribeService;
+
     @Override
     public PageInfo<StudentVO> pageData(StudentQuery query) {
         //开启分页
@@ -87,6 +90,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     }
 
     private void checkObject(StudentDTO formDTO){
+        //校验账号 手机格式 以及 判重
         if(StringUtils.isNotEmpty(formDTO.getUserAccount())){
             if (!formDTO.getUserAccount().matches(ChangeType.PHONE_CHECK)){
                 throw new BusinessException(ErrorCodeEnum.PHONE_FORMAT);
@@ -94,6 +98,12 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
             AccountUser accountUser = accountUserMapper.selectOne(new QueryWrapper<AccountUser>().lambda().eq(AccountUser::getUserAccount, formDTO.getUserAccount()).orderByDesc(AccountUser::getGmtCreate).last("limit 1"));
             if(accountUser!=null){
                 throw new BusinessException(ErrorCodeEnum.LOGIN_EXIST);
+            }
+        }
+        //校验 邮箱格式
+        if(StringUtils.isNotEmpty(formDTO.getEmail())){
+            if(!formDTO.getEmail().matches(ChangeType.EMAIL_CHECK)){
+                throw new BusinessException(ErrorCodeEnum.EMAIL_FORMAT);
             }
         }
     }
@@ -156,6 +166,14 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void insertData(StudentDTO studentDTO) {
+
+        //判断一下邮箱格式
+        if(StringUtils.isNotEmpty(studentDTO.getEmail())){
+            if(!studentDTO.getEmail().matches(ChangeType.EMAIL_CHECK)){
+                throw new BusinessException(ErrorCodeEnum.EMAIL_FORMAT);
+            }
+        }
+
         // 首先新增一个账号  并拿到该账号的id
         AccountUserDTO accountUserDTO = new AccountUserDTO();
         BeanUtil.copy(studentDTO,accountUserDTO);
@@ -232,11 +250,28 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         String[] id = ids.split(",");
         String password = this.checkPassword("123456");
         for(String i:id){
-            System.out.println("=================================");
-            System.out.println(i);
-            System.out.println("=================================");
+//            System.out.println("=================================");
+//            System.out.println(i);
+//            System.out.println("=================================");
             studentMapper.resetPwd(i,password);
         }
+    }
+
+    @Async
+    @Override
+    public void subscribeCourse(SessionUser sessionUser) {
+        //传过来userid
+        //联表查询到对应师傅的手机号
+        String email = studentMapper.selectTeacherPhone(sessionUser.getUserId());
+        //存取约课记录
+        CourseSubscribeDTO courseSubscribeDTO = new CourseSubscribeDTO(sessionUser.getUserId(),null,0);
+        courseSubscribeService.insertData(courseSubscribeDTO);
+        //调用发送短信提醒师傅
+
+        System.out.println("==================开始进入发邮箱的方法=====================");
+        SendEmailUtil.sendEmail(email, sessionUser.getUserName());
+        System.out.println("==================发邮箱方法已结束=====================");
+
     }
 
 

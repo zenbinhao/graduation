@@ -49,14 +49,14 @@ public class PermissionAspect {
         // 如果是管理员接口
         if(operation.checkPermission()){
             if(paramUser!=null){
-                AccountUser accountUser = accountUserMapper.selectById(paramUser.getUserId());
-                //如果是非超级管理员操作
+//                AccountUser accountUser = accountUserMapper.selectById(paramUser.getUserId());
+                //如果满足条件   只能是超级管理员操作
                 if(operation.checkEmployee()){
-                    if(accountUser.getUserType()!=1){
+                    if(paramUser.getUserType()!=1){
                         throw new BusinessException(ErrorCodeEnum.NO_PERMISSIONS.getCode(),ErrorCodeEnum.NO_PERMISSIONS.getMsg().replace("{module}","超级管理员模块").replace("{type}",type));
                     }
                 }
-                if(accountUser.getUserType()!=1 && accountUser.getUserType()!=2){
+                if(paramUser.getUserType()!=1 && paramUser.getUserType()!=2){
                     throw new BusinessException(ErrorCodeEnum.NO_PERMISSIONS.getCode(),ErrorCodeEnum.NO_PERMISSIONS.getMsg().replace("{module}","管理员模块").replace("{type}",type));
                 }
             }else {

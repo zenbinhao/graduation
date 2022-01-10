@@ -64,6 +64,9 @@
             <if test="memo!=null and memo!=''">
                 b.memo = #{memo},
             </if>
+            <if test="email!=null and email!=''">
+                b.email = #{email},
+            </if>
                 b.version = b.version+1,
                 b.gmt_modified= CURRENT_TIMESTAMP ,
                 b.update_user_id = #{updateUserId},
@@ -91,4 +94,9 @@
             b.gmt_modified= CURRENT_TIMESTAMP
         where b.id = #{id}
     </update>
+
+    <select id="selectTeacherPhone" parameterType="String" resultType="String">
+        select b.email from drive_student as a inner join drive_teacher as b on a.fk_teacher_id = b.id
+        WHERE b.is_deleted=0 AND a.is_deleted=0 and a.fk_user_id = #{id}
+    </select>
 </mapper>
