@@ -132,6 +132,10 @@
           <el-input placeholder="请填写教练员密码" v-model="add.userPassword" show-password>
           </el-input>
         </el-form-item>
+        <el-form-item prop="email" label="邮箱 :">
+          <el-input placeholder="请填写邮箱" v-model="add.email">
+          </el-input>
+        </el-form-item>
         <el-form-item label="性别 :" prop="sex">
             <el-radio-group v-model="add.sex">
               <el-radio :label="0">男</el-radio>
@@ -195,6 +199,10 @@
                 <el-input placeholder="请填写教练员手机号" v-model="alt.phone">
                 </el-input>
               </el-form-item>
+              <el-form-item prop="email" label="邮箱 :">
+                <el-input placeholder="请填写邮箱" v-model="alt.email">
+                </el-input>
+              </el-form-item>
               <el-form-item label="性别 :" prop="sex">
                   <el-radio-group v-model="alt.sex">
                     <el-radio :label="0">男</el-radio>
@@ -249,6 +257,13 @@
     name: "",
     //数据存放
     data() {
+      var validateEmail = (rule, value, callback) => {
+        let emailReg = /^[0-9a-z]+\w*@([0-9a-z]+\.)+[0-9a-z]+$/
+        if (!emailReg.test(value)) {
+          return callback(new Error('邮箱格式不正确'))
+        }
+        callback()
+      }
       var validatePhone = (rule, value, callback) => {
         let phoneReg = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0-9]))\d{8}$/
         if (!phoneReg.test(value)) {
@@ -292,6 +307,7 @@
           ["age","年龄",50],
           ["introduction","教练员简介",100],
           ["studentNumber","总学员数量",100],
+          ["email","邮箱",180],
           ["createUserName","创建人",80],
           ["gmtCreate","创建时间",90],
           ["updateUserName","修改人",80],
@@ -323,6 +339,10 @@
           photo: [
             {required: true, message: '清选择照片', tigger: 'blur'}
           ],
+          email: [
+            {required: true, message: '清输入邮箱', tigger: 'blur'},
+            { validator: validateEmail, trigger: 'blur' }
+          ],
         },
         rulesUpdate: {
           name: [
@@ -339,6 +359,10 @@
           photo: [
             {required: true, message: '清选择照片', tigger: 'blur'}
           ],
+          email: [
+            {required: true, message: '清输入邮箱', tigger: 'blur'},
+            { validator: validateEmail, trigger: 'blur' }
+          ],
         },
         add:{
           name: '隔壁老王',
@@ -348,6 +372,7 @@
           sex: 0,
           age: 30,
           introduction:'简介',
+          email: '211125371@qq.com',
         },
         alt:{
           name: null,
@@ -358,7 +383,8 @@
           introduction: null,
           fkUserId: null,
           version: null,
-          id:null
+          id:null,
+          email:null,
         },
         headers:{
           authToken:''
@@ -422,6 +448,7 @@
             // console.log(this.currentRowData.picture)
             // console.log(this.currentRowData)
             let params ={
+                email: this.alt.email==this.currentRowData.email?null:this.alt.email,
               	name: this.alt.name==this.currentRowData.name?null:this.alt.name,
               	photo: this.alt.photo==this.currentRowData.photo?null:this.alt.photo,
               	sex: this.alt.sex==this.currentRowData.sex?null:this.alt.sex,
@@ -463,6 +490,7 @@
         this.$refs[refName].validate((valid) => {
           if(valid){
             let params ={
+                email: this.add.email,
               	name: this.add.name,
               	photo: this.add.photo,
               	phone: this.add.phone,
@@ -553,7 +581,8 @@
           version: row.version,
           id: row.id,
           introduction: row.introduction,
-          fkUserId: row.fkUserId
+          fkUserId: row.fkUserId,
+          email: row.email
         }
         // 存储当前修改行的数据
         this.currentRowData = row
@@ -675,7 +704,7 @@
   }
   .addStudentform{
     padding: 0 20px;
-    height: 680px;
+    height: 800px;
     overflow-y: scroll;
     position: relative;
     overflow-x: hidden;

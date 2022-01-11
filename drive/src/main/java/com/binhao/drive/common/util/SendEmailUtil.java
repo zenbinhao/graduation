@@ -3,6 +3,7 @@ package com.binhao.drive.common.util;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -25,15 +26,17 @@ import java.util.Properties;
 @Slf4j
 public class SendEmailUtil {
 
+    @Value("${mail.sendPeople}")
+    private static String sendPeople;
 
+    @Value("${mail.sendPassWord}")
+    private static String sendPassWord;
 
-    public static void sendEmail(String toUser,String sendName) {
+    public static void sendEmail(String toUser, String sendName) {
 
         System.out.println("进入方法---------------------------------------------发送邮件");
 
         String host="smtp.qq.com";//邮箱服务器
-        String sendUser="594192936@qq.com";//发件人登录用户名
-        String sendPassWord="khnkiffrzelrbcai";//发件人登录密码
 
         try {
             Properties props = new Properties();                // 用于连接邮件服务器的参数配置（发送邮件时才需要用到）
@@ -83,7 +86,7 @@ public class SendEmailUtil {
             // 设置发件人
 
 
-            msg.setFrom(new InternetAddress(sendUser));
+            msg.setFrom(new InternetAddress(sendPeople));
 
 
             msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toUser));// 设置收件人地址
@@ -92,7 +95,7 @@ public class SendEmailUtil {
             msg.saveChanges();//保存设置
             Transport transport = session.getTransport("smtp");
             // 连接邮件服务器
-            transport.connect(host,sendUser,sendPassWord);
+            transport.connect(host,sendPeople,sendPassWord);
             //transport.sendMessage(msg, new Address[] {new InternetAddress(toUser)});
             System.out.println("正在发送=============================================");
             transport.sendMessage(msg, msg.getRecipients(Message.RecipientType.TO));// 发送邮件

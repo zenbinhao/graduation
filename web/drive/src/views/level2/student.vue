@@ -164,6 +164,10 @@
           <el-input placeholder="请填身份证" v-model="add.card">
           </el-input>
         </el-form-item>
+        <el-form-item prop="email" label="邮箱 :">
+          <el-input placeholder="请填邮箱" v-model="add.email">
+          </el-input>
+        </el-form-item>
 <!--        <el-form-item label="考试进度:" prop="plan">
           <el-radio-group v-model="add.plan">
             <el-radio-button :label="0">报名</el-radio-button>
@@ -225,6 +229,10 @@
             </el-form-item>
             <el-form-item prop="card" label="身份证 :">
               <el-input placeholder="请填身份证" v-model="alt.card">
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="email" label="邮箱 :">
+              <el-input placeholder="请填邮箱" v-model="alt.email">
               </el-input>
             </el-form-item>
     <!--        <el-form-item label="考试进度:" prop="plan">
@@ -296,6 +304,14 @@
     name: "",
     //数据存放
     data() {
+      var validateEmail = (rule, value, callback) => {
+        let emailReg = /^[0-9a-z]+\w*@([0-9a-z]+\.)+[0-9a-z]+$/
+        if (!emailReg.test(value)) {
+          return callback(new Error('邮箱格式不正确'))
+        }
+        callback()
+      }
+
       var validatePhone = (rule, value, callback) => {
         let phoneReg = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0-9]))\d{8}$/
         if (!phoneReg.test(value)) {
@@ -354,7 +370,8 @@
           ["gmtCreate","创建时间",90],
           ["updateUserName","修改人",80],
           ["gmtModified","修改时间",90],
-          ["teacherName","教练姓名",80]
+          ["teacherName","教练姓名",80],
+          ["email","邮箱",180],
           // ["memo","备注"]
         ],
         pageNum:0,
@@ -383,6 +400,10 @@
           picture: [
             {required: true, message: '清选择照片', tigger: 'blur'}
           ],
+          email: [
+            {required: true, message: '清输入邮箱', tigger: 'blur'},
+            { validator: validateEmail, trigger: 'blur' }
+          ],
         },
         rulesUpdate: {
           userName: [
@@ -400,6 +421,10 @@
           picture: [
             {required: true, message: '清选择照片', tigger: 'blur'}
           ],
+          email: [
+            {required: true, message: '清输入邮箱', tigger: 'blur'},
+            { validator: validateEmail, trigger: 'blur' }
+          ],
         },
         add:{
           userName: 'a',
@@ -408,6 +433,7 @@
           picture:'',
           sex:0,
           card:'430224199901130000',
+          email: '3223570002@qq.com',
         },
         alt:{
           userName: '',
@@ -488,6 +514,7 @@
             // console.log(this.currentRowData.picture)
             // console.log(this.currentRowData)
             let params ={
+                email: this.alt.email==this.currentRowData.email?null:this.alt.email,
               	card: this.alt.card==this.currentRowData.card?null:this.alt.card,
               	picture: this.alt.picture==this.currentRowData.picture?null:this.alt.picture,
               	sex: this.alt.sex==this.currentRowData.sex?null:this.alt.sex,
@@ -532,7 +559,8 @@
               	sex: this.add.sex,
               	userAccount: this.add.userAccount,
               	userName: this.add.userName,
-              	userPassword: this.add.userPassword
+              	userPassword: this.add.userPassword,
+                email: this.add.email
             }
             console.log(params)
             axios.post(this.action.addStudent,
@@ -620,7 +648,8 @@
           sex: row.sex,
           card: row.card,
           version: row.version,
-          id: row.id
+          id: row.id,
+          email: row.email,
         }
         // 存储当前修改行的数据
         this.currentRowData = row
