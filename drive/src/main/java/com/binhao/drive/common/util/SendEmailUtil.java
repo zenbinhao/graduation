@@ -32,8 +32,8 @@ public class SendEmailUtil {
         System.out.println("进入方法---------------------------------------------发送邮件");
 
         String host="smtp.qq.com";//邮箱服务器
-        String sendUser="594192936@qq.com";//发件人登录用户名
-        String sendPassWord="khnkiffrzelrbcai";//发件人登录密码
+        String sendUser="";//发件人登录用户名
+        String sendPassWord="";//发件人登录密码
 
         try {
             Properties props = new Properties();                // 用于连接邮件服务器的参数配置（发送邮件时才需要用到）
