@@ -9,4 +9,14 @@
         </foreach>
     </update>
 
+    <select id="selectMySub" parameterType="com.binhao.drive.manager.query.MySubQuery"
+            resultType="com.binhao.drive.manager.vo.MySubVO">
+        select a.*,b.user_name,b.user_account,c.email,c.plan FROM drive_coursesubscribe as a
+        INNER JOIN drive_user as b on a.fk_user_id = b.id
+        INNER JOIN drive_student as c on a.fk_user_id = c.fk_user_id
+        WHERE a.is_deleted = 0 and b.is_deleted = 0 and c.is_deleted = 0 AND c.fk_teacher_id = #{teacherId}
+        <if test="isResponse!=null">
+            and a.is_response = #{isResponse}
+        </if>
+    </select>
 </mapper>

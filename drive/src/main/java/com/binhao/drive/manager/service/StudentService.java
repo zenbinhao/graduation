@@ -13,6 +13,8 @@ import com.binhao.drive.manager.query.StudentQuery;
 import com.binhao.drive.manager.vo.StudentVO;
 import com.github.pagehelper.PageInfo;
 
+import java.util.concurrent.Future;
+
 public interface StudentService extends IService<Student> {
 
     PageInfo<StudentVO> pageData(StudentQuery query);
@@ -35,5 +37,9 @@ public interface StudentService extends IService<Student> {
 
     void resetPwd(String ids);
 
-    void subscribeCourse(SessionUser sessionUser);
+//    Future<Integer> subscribeCourse(SessionUser sessionUser);
+
+//    int insertExam(String id);
+
+//    void checkPass(String fkUserId);
 }

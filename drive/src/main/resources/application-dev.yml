@@ -5,3 +5,21 @@ spring:
     password: 666666
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://127.0.0.1:3306/drive?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+
+# 自定义工具类使用
+mail:
+  #发送人
+  sendPeople: 594192936@qq.com
+  #发送人密码
+  sendPassWord: khnkiffrzelrbcai
+  #标题
+  sendTitle: "18106班+学号20+曾斌昊+毕业设计驾校管理系统"
+  #主机
+  host: smtp.qq.com
+  props:
+    #开启debug调试
+    debug: true
+    #身份验证
+    auth: true
+    #邮件传输协议
+    protocol: smtp

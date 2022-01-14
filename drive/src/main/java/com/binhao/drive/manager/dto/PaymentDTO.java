@@ -26,6 +26,6 @@ public class PaymentDTO extends BusinessFormDTO {
     @ApiModelProperty("缴费内容(0报名费、1科目一、2科目二、3科目三、4科目四、5其他)")
     private Integer content;
 
-    @ApiModelProperty("收费认定（0未受理、1已确认、2驳回）")
+    @ApiModelProperty("收费认定（0未受理、1已确认）")
     private Integer isCheck;
 }

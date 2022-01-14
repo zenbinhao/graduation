@@ -50,6 +50,9 @@ public enum ErrorCodeEnum {
     DD_ID_USER("1041", "未查询到绑定该钉钉账号的用户信息"),
     LOGIN_EXIST("1042", "帐号已存在"),
     PHONE_FORMAT("1043", "手机号格式有误"),
+    CHECK_COURSE("1045", "已经预约过，静待回复"),
+    NO_TEACHER_ERROR("1046","请先缴费，找管理员选择老师"),
+    EXAM_EXIST_ERROR("1047","已预约考试，勿重复预约"),
     EMAIL_FORMAT("1044", "邮箱格式有误");
 
     private String code;

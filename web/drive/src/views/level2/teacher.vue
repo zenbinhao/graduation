@@ -35,7 +35,7 @@
       <!-- 下拉详情 -->
       <el-table-column
       type="expand">
-        <templat slot-scope="scope">
+        <template slot-scope="scope">
          <el-form label-position="right" inline class="demo-table-expand" label-width="90px">
             <el-form-item :label="obj[1]+':'" v-for="(obj,index) in tableHead" :key="index">
               <img :src="scope.row[obj[0]]" v-if="obj[0]=='photo'" class="listImg">
@@ -50,7 +50,7 @@
               </span>
             </el-form-item>
           </el-form>
-        </templat>
+        </template>
       </el-table-column>
      <el-table-column
         v-for="(obj,index) in tableHead" :key="index"

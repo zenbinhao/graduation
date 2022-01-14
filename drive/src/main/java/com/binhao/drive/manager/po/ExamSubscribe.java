@@ -24,6 +24,9 @@ public class ExamSubscribe extends BusinessPO {
     @ApiModelProperty("是否受理(0未受理，1已处理)")
     private Integer isResponse;
 
-    @ApiModelProperty("考试通过认定(0未通过，1通过)")
+    @ApiModelProperty("考试通过认定(0未处理,1通过,2不通过)")
     private Integer isPass;
+
+    @ApiModelProperty("处理内容")
+    private String content;
 }

@@ -5,20 +5,29 @@ package com.binhao.drive.manager.controller;/*
  */
 
 import com.binhao.drive.common.aop.AopOperation;
+import com.binhao.drive.common.bo.SessionUser;
 import com.binhao.drive.common.controller.BaseController;
+import com.binhao.drive.common.em.ErrorCodeEnum;
+import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.common.vo.ResultVO;
+import com.binhao.drive.manager.dto.CourseSubscribeDTO;
 import com.binhao.drive.manager.dto.TeacherDTO;
 import com.binhao.drive.manager.dto.TeacherInsertDTO;
 import com.binhao.drive.manager.po.Teacher;
+import com.binhao.drive.manager.query.MySubQuery;
 import com.binhao.drive.manager.query.TeacherQuery;
 import com.binhao.drive.manager.service.TeacherService;
+import com.binhao.drive.manager.vo.MySubVO;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Api(
         tags = "管理端-教练员信息管理"
@@ -32,7 +41,9 @@ public class TeacherController extends BaseController {
 
     @AopOperation(
             type = "分页查询",
-            checkPermission = true
+            checkPermission = true,
+            checkEmployee = true
+
     )
     @ApiOperation("分页查询")
     @PostMapping({"/page"})
@@ -43,7 +54,9 @@ public class TeacherController extends BaseController {
 
     @AopOperation(
             type = "详情",
-            checkPermission = true
+            checkPermission = true,
+            checkEmployee = true
+
     )
     @ApiOperation("通过id查询")
     @GetMapping({"/{id}"})
@@ -56,7 +69,9 @@ public class TeacherController extends BaseController {
 
     @AopOperation(
             type = "新增",
-            checkPermission = true
+            checkPermission = true,
+            checkEmployee = true
+
     )
     @ApiOperation("新增信息")
     @PostMapping({"/"})
@@ -67,7 +82,8 @@ public class TeacherController extends BaseController {
 
     @AopOperation(
             type = "修改",
-            checkPermission = true
+            checkPermission = true,
+            checkEmployee = true
     )
     @ApiOperation("修改信息")
     @PutMapping({"/"})
@@ -78,7 +94,8 @@ public class TeacherController extends BaseController {
 
     @AopOperation(
             type = "批量删除",
-            checkPermission = true
+            checkPermission = true,
+            checkEmployee = true
     )
     @ApiOperation("批量删除ID删除逗号隔开")
     @DeleteMapping({"/{ids}"})
@@ -86,5 +103,8 @@ public class TeacherController extends BaseController {
         teacherService.deleteData(ids);
         return this.success("批量删除成功");
     }
+
+
+
 
 }

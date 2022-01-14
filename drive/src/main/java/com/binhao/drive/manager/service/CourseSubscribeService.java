@@ -17,4 +17,6 @@ public interface CourseSubscribeService extends IService<CourseSubscribe> {
     CourseSubscribeVO selectDataById(String id);
 
     void insertData(CourseSubscribeDTO formDTO);
+
+    void selectCountCheck(String id);
 }

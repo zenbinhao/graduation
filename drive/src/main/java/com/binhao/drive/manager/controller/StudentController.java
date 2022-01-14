@@ -6,6 +6,8 @@ package com.binhao.drive.manager.controller;/*
 
 import com.binhao.drive.common.aop.AopOperation;
 import com.binhao.drive.common.controller.BaseController;
+import com.binhao.drive.common.em.ErrorCodeEnum;
+import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.common.vo.ResultVO;
 import com.binhao.drive.manager.dto.ChooseTeacherDTO;
 import com.binhao.drive.manager.dto.StudentDTO;
@@ -15,10 +17,13 @@ import com.binhao.drive.manager.vo.StudentVO;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.SneakyThrows;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Api(
         tags = {"管理端-学员信息管理"}
@@ -133,14 +138,4 @@ public class StudentController extends BaseController {
     }
 
 
-
-    @AopOperation(
-            type = "学员预约课程"
-    )
-    @ApiOperation("学员预约课程")
-    @PostMapping({"/insertCourseSub"})
-    public ResultVO insertSubscribeCourse() {
-        studentService.subscribeCourse(this.getSessionUser());
-        return this.success("学员预约课程成功,并发送邮箱通知其教练员");
-    }
 }

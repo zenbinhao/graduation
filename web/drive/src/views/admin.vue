@@ -104,6 +104,7 @@
   }
 
   .el-main {
+    // width: 100%;
     background-color: #f5f7fb;
     color: #333;
     text-align: center;

@@ -4,8 +4,11 @@ package com.binhao.drive.manager.service.impl;/*
  * @Description: TODO
  */
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.binhao.drive.common.em.ErrorCodeEnum;
 import com.binhao.drive.common.util.BeanUtil;
+import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.manager.dto.CourseSubscribeDTO;
 import com.binhao.drive.manager.mapper.CourseSubscribeMapper;
 import com.binhao.drive.manager.po.CourseSubscribe;
@@ -36,6 +39,7 @@ public class CourseSubscribeServiceImpl extends ServiceImpl<CourseSubscribeMappe
     public void updateData(CourseSubscribeDTO formDTO) {
         CourseSubscribe courseSubscribe = new CourseSubscribe();
         BeanUtil.copy(formDTO,courseSubscribe);
+        courseSubscribe.setIsResponse(1);
         courseSubscribeMapper.updateById(courseSubscribe);
     }
 
@@ -49,5 +53,14 @@ public class CourseSubscribeServiceImpl extends ServiceImpl<CourseSubscribeMappe
         CourseSubscribe courseSubscribe = new CourseSubscribe();
         BeanUtil.copy(formDTO,courseSubscribe);
         courseSubscribeMapper.insert(courseSubscribe);
+    }
+
+    @Override
+    public void selectCountCheck(String id) {
+        //找到这个人 以及未处理的  预约信息
+        int check = courseSubscribeMapper.selectCount(new QueryWrapper<CourseSubscribe>().lambda().eq(CourseSubscribe::getIsResponse, 0).eq(CourseSubscribe::getFkUserId, id));
+        if (check>0){
+            throw new BusinessException(ErrorCodeEnum.CHECK_COURSE);
+        }
     }
 }

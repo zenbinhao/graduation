@@ -18,4 +18,7 @@ public class PaymentQuery extends PageQuery {
 
     @ApiModelProperty("学员账号（手机号）")
     private String userAccount;
+
+    @ApiModelProperty("缴费认定 0未缴费 1已确定")
+    private Integer isCheck;
 }

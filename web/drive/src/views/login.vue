@@ -82,7 +82,6 @@
         }
         }).then((res)=>{
           if(res.data.code==0){
-            
             if(res.data.data.userType==1){
               this.$router.push('/admin')
             }else if(res.data.data.userType==0){

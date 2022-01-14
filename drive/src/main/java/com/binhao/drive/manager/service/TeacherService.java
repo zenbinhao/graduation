@@ -1,12 +1,18 @@
 package com.binhao.drive.manager.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.binhao.drive.common.bo.SessionUser;
+import com.binhao.drive.manager.dto.CourseSubscribeDTO;
 import com.binhao.drive.manager.dto.TeacherDTO;
 import com.binhao.drive.manager.dto.TeacherInsertDTO;
 import com.binhao.drive.manager.po.Teacher;
+import com.binhao.drive.manager.query.MySubQuery;
 import com.binhao.drive.manager.query.TeacherQuery;
+import com.binhao.drive.manager.vo.MySubVO;
 import com.binhao.drive.manager.vo.TeacherVO;
 import com.github.pagehelper.PageInfo;
+
+import java.util.concurrent.Future;
 
 public interface TeacherService extends IService<Teacher>{
     /**
@@ -52,5 +58,25 @@ public interface TeacherService extends IService<Teacher>{
      **/
     TeacherVO selectById(String id);
 
+
+//    /**
+//     * @Author zengbh
+//     * @Description //TODO 查看自己的学员预约信息
+//     * @Date 16:40
+//     * @Param
+//     * @return
+//     **/
+//
+//    PageInfo<MySubVO> pageDataMySub(MySubQuery query);
+//
+//    /**
+//     * @Author zengbh
+//     * @Description //TODO 回应学员预约信息
+//     * @Date 16:43
+//     * @Param
+//     * @return
+//     **/
+//    Future<Integer> updateResponseStudent(CourseSubscribeDTO dto, SessionUser sessionUser);
+//
 
 }

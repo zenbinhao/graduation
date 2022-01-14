@@ -23,6 +23,7 @@ public class CourseSubscribeDTO extends BusinessFormDTO {
     @ApiModelProperty("教练员自定义回应内容")
     private String responseContent;
 
-    @ApiModelProperty("教练员是否回应(0未受理，1已回应)")
-    private Integer isResponse;
+    @ApiModelProperty("学员的邮箱")
+    private String email;
+
 }

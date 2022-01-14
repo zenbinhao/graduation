@@ -4,6 +4,7 @@ package com.binhao.drive.common.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -23,28 +24,42 @@ import java.util.Properties;
  *
  */
 
+@Component
 @Slf4j
 public class SendEmailUtil {
 
     @Value("${mail.sendPeople}")
-    private static String sendPeople;
+    private String sendPeople;
 
     @Value("${mail.sendPassWord}")
-    private static String sendPassWord;
+    private String sendPassWord;
 
-    public static void sendEmail(String toUser, String sendName) {
+    @Value("${mail.sendTitle}")
+    private String sendTitle;
+
+    @Value("${mail.host}")
+    private String host;
+
+    @Value("${mail.props.debug}")
+    private String debug;
+
+    @Value("${mail.props.auth}")
+    private String auth;
+
+    @Value("${mail.props.protocol}")
+    private String protocol;
+
+    public void sendEmail(String toUser,String sendContent) {
 
         System.out.println("进入方法---------------------------------------------发送邮件");
-
-        String host="smtp.qq.com";//邮箱服务器
 
         try {
             Properties props = new Properties();                // 用于连接邮件服务器的参数配置（发送邮件时才需要用到）
             //创建参数配置, 用于连接邮件服务器的参数配置
-            props.setProperty("mail.debug", "true");    // 开启debug调试
-            props.setProperty("mail.smtp.auth", "true");    // 发送服务器需要身份验证
+            props.setProperty("mail.debug", debug);    // 开启debug调试
+            props.setProperty("mail.smtp.auth", auth);    // 发送服务器需要身份验证
             props.setProperty("mail.host", host);        // 设置邮件服务器主机名
-            props.setProperty("mail.transport.protocol", "smtp");    // 发送邮件协议名称
+            props.setProperty("mail.transport.protocol", protocol);    // 发送邮件协议名称
 
             /*
              * PS: 某些邮箱服务器要求 SMTP 连接需要使用 SSL 安全认证 (为了提高安全性, 邮箱支持SSL连接, 也可以自己开启),
@@ -73,12 +88,10 @@ public class SendEmailUtil {
 
 
             // 设置邮件内容
-            msg.setSubject("驾校管理系统：");        //设置邮件标题
+            msg.setSubject(sendTitle);        //设置邮件标题
             // 设置邮件内容
 
-
-            String content = "[驾校管理系统]:您的学员"+sendName+"已预约了您的课程，请教练员尽快排课\nhttp://localhost:8080/#/";
-            msg.setText(content);
+            msg.setText(sendContent);
             //msg.setContent("这是一封由JavaMail发送的邮件！","text/html;charset=GBK");
 
 

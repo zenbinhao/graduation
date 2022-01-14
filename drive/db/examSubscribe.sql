@@ -10,8 +10,9 @@ CREATE TABLE `drive_examsubscribe`  (
       `id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '主键id',
       `subject` tinyint(1) NOT NULL DEFAULT 1 COMMENT '考试科目(1科目一、2科目二、3科目三、4科目四)',
       `is_response` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否受理(0未受理，1已处理)',
-      `is_pass` tinyint(1) NOT NULL DEFAULT 0 COMMENT '考试通过认定(0未通过，1通过)',
+      `is_pass` tinyint(1) NOT NULL DEFAULT 0 COMMENT '考试通过认定(0未处理，1通过,2不通过)',
       `fk_user_id` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '外键student_id',
+      `content` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '处理发送的邮件内容',
 
 
       `is_deleted` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否删除，0默认，1表示删除',

@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>5.0.7.RELEASE</version>
+            <version>5.2.15.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>

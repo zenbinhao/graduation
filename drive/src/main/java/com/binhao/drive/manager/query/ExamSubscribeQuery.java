@@ -9,6 +9,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @ApiModel(value = "ExamSubscribeQuery",description = "预约考试信息查询条件")
 public class ExamSubscribeQuery extends PageQuery {
@@ -18,4 +20,9 @@ public class ExamSubscribeQuery extends PageQuery {
 
     @ApiModelProperty("学员账号（手机号）")
     private String userAccount;
+
+    @NotNull(message = "考试科目不能为空")
+    @ApiModelProperty("考试科目(1科目一、2科目二、3科目三、4科目四)")
+    private Integer subject;
+
 }

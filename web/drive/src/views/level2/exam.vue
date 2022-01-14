@@ -1,13 +1,34 @@
 <template>
-  <div class="student-box">
-
-
-
+  <div class="student-box" v-loading.fullscreen.lock="fullscreenLoading">
+    <el-radio-group v-model="radio">
+      <el-radio-button :label="1">科目一</el-radio-button>
+      <el-radio-button :label="2">科目二</el-radio-button>
+      <el-radio-button :label="3">科目三</el-radio-button>
+      <el-radio-button :label="4">科目四</el-radio-button>
+    </el-radio-group>
+    <p>&nbsp;</p>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>请描述您的回复，回复不能少于10字</span>
+      <p>&nbsp;</p>
+      <el-input
+        type="textarea"
+        placeholder="请输入内容"
+        v-model="textarea"
+        maxlength="50"
+        show-word-limit
+      />
+      <p>&nbsp;</p>
+      <el-button type="info" @click="delResponse()">回复</el-button>
+    </el-dialog>
 
     <!--头部按钮操作-->
     <div class="operation">
       <div>
-
+        <el-button type="primary" @click="openDialog()">处理回复</el-button>
         <!-- <el-button type="primary" @click="isAddShow=true">录入信息</el-button> -->
         <!-- <el-button type="danger" @click="deleteTableData()">批量删除</el-button> -->
       </div>
@@ -27,24 +48,28 @@
     <!--表格信息-->
     <el-table
       :data="tableData"
+      @selection-change="getIds"
       style="width: 100%">
+      <el-table-column
+        type="selection"
+        width="30"/>
       <!-- 下拉详情 -->
       <el-table-column
       type="expand">
         <template slot-scope="scope">
-         <el-form label-position="right" inline class="demo-table-expand" label-width="90px">
+         <el-form label-position="right" inline class="demo-table-expand" label-width="100px">
             <el-form-item :label="obj[1]+':'" v-for="(obj,index) in tableHead" :key="index">
               <span v-if="obj[0]=='gmtCreate' || obj[0]=='gmtModified'">
                 {{scope.row[obj[0]] | formatDate}}
               </span>
-              <span v-else-if="obj[0]=='payWay'">
-                {{ payWayTableShow[scope.row[obj[0]]] }}
+              <span v-else-if="obj[0]=='subject'">
+                {{ subjectTableShow[scope.row[obj[0]]] }}
               </span>
-              <span v-else-if="obj[0]=='content'">
-                {{ contentTableShow[scope.row[obj[0]]] }}
+              <span v-else-if="obj[0]=='isResponse'" :style="scope.row[obj[0]]==0?'color:red;font-weight: 800;':'color:green; font-weight: 800;'">
+                {{ isResponseShow[scope.row[obj[0]]] }}
               </span>
-              <span v-else-if="obj[0]=='isCheck'" :style="scope.row[obj[0]]==0?'color:red;font-weight: 800;':'color:green; font-weight: 800;'">
-                {{ isCheckTableShow[scope.row[obj[0]]] }}
+              <span v-else-if="obj[0]=='isPass'" :style="scope.row[obj[0]]==0?'color:red;font-weight: 800;':'color:green; font-weight: 800;'">
+                {{ isPassTableShow[scope.row[obj[0]]] }}
               </span>
               <span v-else>
                 {{scope.row[obj[0]]}}
@@ -75,14 +100,14 @@
           <span v-if="obj[0]=='gmtCreate' || obj[0]=='gmtModified'">
             {{scope.row[obj[0]] | formatDate}}
           </span>
-          <span v-else-if="obj[0]=='payWay'">
-            {{ payWayTableShow[scope.row[obj[0]]] }}
+          <span v-else-if="obj[0]=='subject'">
+            {{ subjectTableShow[scope.row[obj[0]]] }}
           </span>
-          <span v-else-if="obj[0]=='content'">
-            {{ contentTableShow[scope.row[obj[0]]] }}
+          <span v-else-if="obj[0]=='isResponse'" :style="scope.row[obj[0]]==0?'color:red;font-weight: 800;':'color:green; font-weight: 800;'">
+            {{ isResponseShow[scope.row[obj[0]]] }}
           </span>
-          <span v-else-if="obj[0]=='isCheck'" :style="scope.row[obj[0]]==0?'color:red;font-weight: 800;':'color:green; font-weight: 800;'">
-            {{ isCheckTableShow[scope.row[obj[0]]] }}
+          <span v-else-if="obj[0]=='isPass'" :style="scope.row[obj[0]]==0?'color:red;font-weight: 800;':'color:green; font-weight: 800;'">
+            {{ isPassTableShow[scope.row[obj[0]]] }}
           </span>
           <span v-else>
             {{scope.row[obj[0]]}}
@@ -91,12 +116,16 @@
       </el-table-column>
      <el-table-column
         label="操作"
-        width="80" >
+        width="180" >
       <template slot-scope="scope">
         <el-button
           size="mini"
-          type="primary"
-          @click="updateState(scope.$index, scope.row,1)" v-show="scope.row.isCheck==0">已缴</el-button>
+          type="success"
+          @click="updateCheck(scope.row.fkUserId,1)" v-show="scope.row.isResponse==1&&scope.row.isPass==0">通过</el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            @click="updateCheck(scope.row.fkUserId,2)" v-show="scope.row.isResponse==1&&scope.row.isPass==0">不通过</el-button>
           <!-- 暂时不提供驳回通道 -->
 <!--        <el-button
           size="mini"
@@ -135,30 +164,35 @@
     //数据存放
     data() {
       return {
+        radio: 1,
         search: {
           name: null,
           phone: null
         },
         tableData: [],
         action: {
-          selectList: "drive/payment/page",
-          updateState: "drive/payment/",
+          selectList: "drive/examSub/page",
+          del: "drive/examSub/del",
+          pass: "drive/examSub/pass/{id}",
+          noPass: "drive/examSub/noPass/{id}"
         },
-        payWayTableShow:["微信","支付宝","现金","其他"],
-        contentTableShow:["报名费","科目一","科目二","科目三","科目四","其他"],
-        isCheckTableShow:["未受理","已确认","驳回"],
+        isPassTableShow:["未处理","通过","不通过"],
+        subjectTableShow:["报名阶段","科目一","科目二","科目三","科目四","其他"],
+        isResponseShow:["未受理","已回复"],
         tableHead:[
           ["userName","姓名",90],
           ["userAccount","手机号",120],
-          // ["sex","性别",50],
-          ["payWay","支付方式",80],
-          ["content","缴费内容",80],
-          ["isCheck","收费认定",80],
+          ["email","邮箱",180],
+          ["subject","考试科目",80],
+          ["isResponse","是否受理",80],
+          ["isPass","考试通过认定",120],
+          ["content","处理内容",200],
           ["createUserName","创建人",80],
           ["gmtCreate","创建时间",160],
           ["updateUserName","修改人",80],
           ["gmtModified","修改时间",160],
         ],
+        dialogVisible: false,
         pageNum:0,
         pageSize:6,
         total: null,
@@ -167,17 +201,21 @@
         },
         imageUrl:'',
         tableData:[],
+        ids: '',
+        emails: '',
+        textarea:'',
+        fullscreenLoading: false
       }
     },
     //方法函数存放
     methods: {
       getList(){
         this.headers.authToken = window.localStorage.getItem("authToken")
+
         let params={
           	pageNum: this.pageNum,
           	pageSize: this.pageSize,
-            userName: this.search.name,
-            userAccount: this.search.phone
+            subject: this.radio
         }
         axios.post(this.action.selectList,params,{
           headers: {
@@ -187,6 +225,7 @@
           // console.log(res.data.data.list)
           this.tableData=res.data.data.list
           this.total = res.data.data.total
+          console.log(res)
         })
       },
       handleSizeChange(val){
@@ -207,18 +246,13 @@
           phone:null
         }
       },
-      updateState(index,row,state){
-        let StringToList = ["是否确定已缴费","是否确定驳回缴费"]
-          this.$confirm(StringToList[state-1], '确定？', {
+      updateCheck(index,state){
+          console.log(index)
+          this.$confirm(state==1?"是否确定通过":"是否确定为不及格", '确定？', {
             confirmButtonText: '确定',
             cancelButtonText: '取消'
           }).then(() => {
-              let params = {
-                  isCheck: state,
-                  version: row.version,
-                  id: row.id,
-              }
-              axios.put(this.action.updateState,params,{
+              axios.put(state==1?this.action.pass.replace("{id}",index):this.action.noPass.replace("{id}",index),null,{
                 headers: {
                   'authToken': this.headers.authToken
                 }
@@ -242,6 +276,70 @@
           })
 
       },
+      getIds(tableData){
+        //ids的获取
+        let ids = ''
+        let emails = ''
+        tableData.forEach((item, index) => {
+          ids += item.id + ','
+          emails+=item.email+ ','
+        })
+        ids = ids.substring(0,ids.length-1)
+        emails = emails.substring(0,emails.length-1)
+        this.ids = ids
+        this.emails = emails
+        console.log(this.ids)
+        console.log(this.emails)
+        //eamils的获取
+      },
+      handleClose(done) {
+        done();
+      },
+      delResponse(){
+        if(this.textarea.length<10){
+          this.$message({
+            type: "warning",
+            message: "请输入超过10个字"
+          })
+          return
+        }
+        this.fullscreenLoading=true
+        let params={
+            ids: this.ids,
+            emails: this.emails,
+            content: this.textarea,
+        }
+        console.log(params)
+        axios.put(this.action.del,params,{
+          headers: {
+            'authToken': this.headers.authToken
+          }
+        }).then((res)=>{
+          if(res.data.code==='0'){
+            this.$message({
+              type: 'success',
+              message: res.data.message
+            })
+            this.getList()
+          }else{
+            this.$message({
+              type: 'error',
+              message: res.data.message
+            })
+          }
+          this.fullscreenLoading = false
+        })
+      },
+      openDialog(){
+        if(this.ids.length>1){
+          this.dialogVisible=!this.dialogVisible
+        }else{
+          this.$message({
+            type: "warning",
+            message: "请先选择列表项"
+          })
+        }
+      }
     },
     //页面加载时
     mounted() {

@@ -12,6 +12,10 @@
         <if test="userAccount!=null and userAccount!=''">
             and b.user_account LIKE concat('%',#{userAccount},'%')
         </if>
+        <if test="isCheck!=null">
+            and b.is_check = #{isCheck}
+        </if>
+
         order by a.gmt_create desc
     </select>
     <select id="selectDataById" parameterType="String"

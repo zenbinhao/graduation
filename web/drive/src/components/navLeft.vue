@@ -31,15 +31,16 @@
        </template>
        <el-menu-item index="3-1" @click="routerToManager(4)">收费信息认定</el-menu-item>
        <el-menu-item index="3-2" @click="routerToManager(5)">教练员排课记录</el-menu-item>
+       <el-menu-item index="1-4" @click="routerToManager(6)">考后认定</el-menu-item>
      </el-submenu>
-     <el-submenu index="4">
+     <!-- <el-submenu index="4">
        <template slot="title">
          <i class="el-icon-setting"></i>
          <span slot="title">系统功能</span>
        </template>
        <el-menu-item index="4-1">数据字典</el-menu-item>
        <el-menu-item index="4-2">操作记录</el-menu-item>
-     </el-submenu>
+     </el-submenu> -->
    </el-menu>
   </div>
 </template>
