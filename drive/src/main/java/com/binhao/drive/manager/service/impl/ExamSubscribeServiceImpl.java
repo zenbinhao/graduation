@@ -55,6 +55,13 @@ public class ExamSubscribeServiceImpl extends ServiceImpl<ExamSubscribeMapper, E
         return examSubscribeMapper.selectDataList(query);
     }
 
+    @Override
+    public PageInfo<ExamSubscribeVO> selectExamList(ExamSubscribeQuery query) {
+        PageHelper.startPage(query.getPageNum(),query.getPageSize());
+        List<ExamSubscribeVO> list = examSubscribeMapper.selectExamList(query);
+        return PageInfo.of(list);
+    }
+
 
     @Override
     public void updateData(ExamSubscribeDTO formDTO) {
@@ -105,7 +112,13 @@ public class ExamSubscribeServiceImpl extends ServiceImpl<ExamSubscribeMapper, E
         examSubscribeMapper.update(null,new UpdateWrapper<ExamSubscribe>().lambda().set(ExamSubscribe::getIsPass,isPass).eq(ExamSubscribe::getFkUserId,fkUserId));
     }
 
-
+    /**
+     * @Author zengbh
+     * @Description //TODO 调用注入 生成约考信息
+     * @Date 18:21 
+     * @Param [id]
+     * @return int
+     **/
 
     @Override
     public int insertExam(String id) {
@@ -135,7 +148,7 @@ public class ExamSubscribeServiceImpl extends ServiceImpl<ExamSubscribeMapper, E
         this.checkPass(fkUserId,1);
 
         //考试进度进入 下一阶段
-        studentMapper.update(null,new UpdateWrapper<Student>().lambda().setSql("plan = plan+1").eq(Student::getFkTeacherId,fkUserId));
+        studentMapper.update(null,new UpdateWrapper<Student>().lambda().setSql("plan = plan+1").eq(Student::getFkUserId,fkUserId));
     }
 
 }

@@ -48,6 +48,7 @@ public class PaymentController extends BaseController {
             checkEmployee = true
 
     )
+    @ApiOperation("查询所有需要确认的缴费信息")
     @PostMapping({"/isCheckList"})
     public ResultVO<List<PaymentVO>> selectIsCheckList(@RequestBody PaymentQuery query){
         List<PaymentVO> info = paymentService.selectIsCheckList(query);
@@ -90,10 +91,10 @@ public class PaymentController extends BaseController {
 
     )
     @ApiOperation("考试缴费已确认")
-    @PutMapping({"/examPayState/{id}"})
-    public ResultVO updateExamPayState(@PathVariable String id) {
-        paymentService.updateExamPayState(id);
-        return this.success("修改信息成功");
+    @PutMapping({"/examPayState/{id}/{fkUserId}"})
+    public ResultVO updateExamPayState(@PathVariable String id,@PathVariable String fkUserId) {
+        paymentService.updateExamPayState(id,fkUserId);
+        return this.success("考试缴费已确认");
     }
 
 

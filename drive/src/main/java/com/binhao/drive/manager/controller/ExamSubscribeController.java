@@ -11,7 +11,6 @@ import com.binhao.drive.manager.dto.DelExamSubDTO;
 import com.binhao.drive.manager.dto.ExamSubscribeDTO;
 import com.binhao.drive.manager.query.ExamSubscribeQuery;
 import com.binhao.drive.manager.service.ExamSubscribeService;
-import com.binhao.drive.manager.service.StudentService;
 import com.binhao.drive.manager.vo.ExamSubscribeVO;
 import com.github.pagehelper.PageInfo;
 import io.swagger.annotations.Api;
@@ -34,12 +33,12 @@ public class ExamSubscribeController extends BaseController {
     private ExamSubscribeService examSubscribeService;
 
     @AopOperation(
-            type = "分页查询",
+            type = "分页查询未处理的预约考试信息",
             checkPermission = true,
             checkEmployee = true
 
     )
-    @ApiOperation("分页查询")
+    @ApiOperation("分页查询未处理的预约考试信息")
     @PostMapping({"/page"})
     public ResultVO<PageInfo<ExamSubscribeVO>> pageDate(@RequestBody ExamSubscribeQuery query){
         PageInfo info = examSubscribeService.pageData(query);
@@ -57,6 +56,19 @@ public class ExamSubscribeController extends BaseController {
     @PostMapping({"/isResponseList"})
     public ResultVO<List<ExamSubscribeVO>> selectIsResponseList(@RequestBody ExamSubscribeQuery query){
         List<ExamSubscribeVO> info = examSubscribeService.selectIsResponseList(query);
+        return this.success(info,"分页查询成功");
+    }
+
+    @AopOperation(
+            type = "分页查询所有考试信息",
+            checkPermission = true,
+            checkEmployee = true
+
+    )
+    @ApiOperation("分页查询所有考试信息")
+    @PostMapping({"/pageAll"})
+    public ResultVO<PageInfo<ExamSubscribeVO>> pageAllDate(@RequestBody ExamSubscribeQuery query){
+        PageInfo info = examSubscribeService.selectExamList(query);
         return this.success(info,"分页查询成功");
     }
 

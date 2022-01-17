@@ -86,21 +86,21 @@ public class H5StudentServiceImpl implements H5StudentService {
         //首先判断是否重复预约考试
 
         //是否缴费信息还未通过
-        Integer integer = paymentMapper.selectCount(new QueryWrapper<Payment>().lambda().eq(Payment::getIsCheck, 0).eq(Payment::getFkUserId, form.getFkUserId()));
+        Integer integer = paymentMapper.selectCount(new QueryWrapper<Payment>().lambda().eq(Payment::getIsCheck, 0).eq(Payment::getFkUserId, sessionUser.getUserId()));
         if(integer>0){
             throw new BusinessException("1060","您的缴费信息还未通过");
         }
         //是否预约信息还未处理
-        Integer integer1 = examSubscribeMapper.selectCount(new QueryWrapper<ExamSubscribe>().lambda().eq(ExamSubscribe::getFkUserId, form.getFkUserId()).eq(ExamSubscribe::getIsResponse, 0));
+        Integer integer1 = examSubscribeMapper.selectCount(new QueryWrapper<ExamSubscribe>().lambda().eq(ExamSubscribe::getFkUserId, sessionUser.getUserId()).eq(ExamSubscribe::getIsResponse, 0));
         if(integer1>0){
             throw new BusinessException("1061","您的预约考试还在处理中");
         }
         //是否考试还未认定
-        Integer integer2 = examSubscribeMapper.selectCount(new QueryWrapper<ExamSubscribe>().lambda().eq(ExamSubscribe::getFkUserId,form.getFkUserId()).eq(ExamSubscribe::getIsPass,0));
+        Integer integer2 = examSubscribeMapper.selectCount(new QueryWrapper<ExamSubscribe>().lambda().eq(ExamSubscribe::getFkUserId, sessionUser.getUserId()).eq(ExamSubscribe::getIsPass,0));
         if (integer2>0){
             throw new BusinessException("1062","您的考试还未进行认定");
         }
-        Student student = studentMapper.selectOne(new QueryWrapper<Student>().lambda().eq(Student::getFkUserId, form.getFkUserId()).orderByDesc(BasePO::getGmtCreate).last("limit 1"));
+        Student student = studentMapper.selectOne(new QueryWrapper<Student>().lambda().eq(Student::getFkUserId, sessionUser.getUserId()).orderByDesc(BasePO::getGmtCreate).last("limit 1"));
 
         //信息进行新增
         Payment payment = new Payment();

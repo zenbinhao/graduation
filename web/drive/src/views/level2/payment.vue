@@ -12,7 +12,7 @@
         <!-- <el-button type="danger" @click="deleteTableData()">批量删除</el-button> -->
       </div>
       <div class="operation-search">
-        <el-button type="success" @click="getList()">显示所有</el-button>
+        <el-button type="success" @click="search={};getList()">显示所有</el-button>
         <el-input v-model="search.name" placeholder="学员姓名回车搜索" @keydown.enter.native="searchList()"></el-input>
         <el-input v-model="search.phone" placeholder="学员手机号回车搜索" @keydown.enter.native="searchList()"></el-input>
       </div>
@@ -96,7 +96,11 @@
         <el-button
           size="mini"
           type="primary"
-          @click="updateState(scope.$index, scope.row,1)" v-show="scope.row.isCheck==0">已缴</el-button>
+          @click="updateState(scope.$index, scope.row,1)" v-show="scope.row.isCheck==0&&scope.row.content==0">已缴</el-button>
+        <el-button
+          size="mini"
+          type="warning"
+          @click="examIsCheck(scope.row.id,scope.row.fkUserId)" v-show="scope.row.isCheck==0&&scope.row.content>0">已缴</el-button>
           <!-- 暂时不提供驳回通道 -->
 <!--        <el-button
           size="mini"
@@ -143,6 +147,7 @@
         action: {
           selectList: "drive/payment/page",
           updateState: "drive/payment/",
+          examPayCheck: "drive/payment/examPayState/{id}/{fkUserId}"
         },
         payWayTableShow:["微信","支付宝","现金","其他"],
         contentTableShow:["报名费","科目一","科目二","科目三","科目四","其他"],
@@ -202,10 +207,10 @@
       searchList(){
         this.pageNum = 0
         this.getList()
-        this.search={
-          name:null,
-          phone:null
-        }
+        // this.search={
+        //   name:null,
+        //   phone:null
+        // }
       },
       updateState(index,row,state){
         let StringToList = ["是否确定已缴费","是否确定驳回缴费"]
@@ -242,6 +247,37 @@
           })
 
       },
+      examIsCheck(id,fkUserId){
+        console.log(id)
+          this.$confirm("是否确定已缴费", '确定？', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消'
+          }).then(() => {
+            axios.put(this.action.examPayCheck.replace("{id}",id).replace("{fkUserId}",fkUserId),null,{
+              headers: {
+                'authToken': this.headers.authToken
+              }
+            }).then((res)=>{
+                if(res.data.code==='0'){
+                  this.$message({
+                    type: 'success',
+                    message: res.data.message
+                  })
+                  this.getList()
+                }else{
+                  this.$message({
+                    type: 'error',
+                    message: res.data.message
+                  })
+                }
+            })
+
+          }).catch(err=>{
+            console.log(err)
+            return
+          })
+
+      }
     },
     //页面加载时
     mounted() {

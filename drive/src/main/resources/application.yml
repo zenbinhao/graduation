@@ -62,8 +62,12 @@ spring:
   #是否启用redis
   redis:
     start: false
+
+#  设置为true时  允许循环依赖  不设置降低能启动  可以大大降低程序耦合性
+#  由于2.6.0spring boot 与 插件冲突 暂时加上
   main:
     allow-circular-references: true
+
 #    database: 6
 #    host: 192.168.92.128
 #    port: 6379

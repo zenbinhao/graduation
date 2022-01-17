@@ -14,4 +14,6 @@ public interface ExamSubscribeMapper extends MapperCustom<ExamSubscribe> {
     List<ExamSubscribeVO> selectDataList(ExamSubscribeQuery query);
 
     ExamSubscribeVO selectDataById(String id);
+
+    List<ExamSubscribeVO> selectExamList(ExamSubscribeQuery query);
 }

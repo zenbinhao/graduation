@@ -103,10 +103,10 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
 //    }
 
     @Override
-    public void updateExamPayState(String id) {
+    public void updateExamPayState(String id,String fkUserId) {
         //首先修改为已缴费通过
         paymentMapper.update(null,new UpdateWrapper<Payment>().lambda().set(Payment::getIsCheck,1).eq(BasePO::getId,id));
         //生成预约考试的信息
-        examSubscribeService.insertExam(id);
+        examSubscribeService.insertExam(fkUserId);
     }
 }

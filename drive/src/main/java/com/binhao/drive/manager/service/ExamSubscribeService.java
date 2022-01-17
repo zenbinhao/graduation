@@ -16,6 +16,8 @@ public interface ExamSubscribeService extends IService<ExamSubscribe> {
     PageInfo<ExamSubscribeVO> pageData(ExamSubscribeQuery query);
 
     List<ExamSubscribeVO> selectIsResponseList(ExamSubscribeQuery query);
+
+    PageInfo<ExamSubscribeVO> selectExamList(ExamSubscribeQuery query);
     //修改状态
     void updateData(ExamSubscribeDTO formDTO);
 

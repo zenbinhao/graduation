@@ -19,6 +19,24 @@
         order by a.gmt_create desc
     </select>
 
+
+    <select id="selectExamList" parameterType="com.binhao.drive.manager.query.ExamSubscribeQuery"
+            resultType="com.binhao.drive.manager.vo.ExamSubscribeVO">
+        select a.*,b.user_name,b.user_account,c.email from drive_examsubscribe as a inner join drive_user as b on a.fk_user_id = b.id
+        inner join drive_student as c on c.fk_user_id =a.fk_user_id
+        where a.is_deleted = 0 AND b.is_deleted = 0 AND c.is_deleted = 0
+        <if test="userName!=null and userName!=''">
+            and b.user_name LIKE concat('%',#{userName},'%')
+        </if>
+        <if test="userAccount!=null and userAccount!=''">
+            and b.user_account LIKE concat('%',#{userAccount},'%')
+        </if>
+<!--        <if test="subject!=null">-->
+<!--            and a.subject = #{subject}-->
+<!--        </if>-->
+        order by a.gmt_create desc
+    </select>
+
     <select id="selectDataById" parameterType="String"
             resultType="com.binhao.drive.manager.vo.ExamSubscribeVO">
         select a.*,b.user_name,b.user_account,c.email from drive_examsubscribe as a inner join drive_user as b on a.fk_user_id = b.id

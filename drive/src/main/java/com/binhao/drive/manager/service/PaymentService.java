@@ -25,5 +25,5 @@ public interface PaymentService extends IService<Payment> {
 
 //    void insertExamPay(PaymentDTO form, SessionUser sessionUser);
 
-    void updateExamPayState(String id);
+    void updateExamPayState(String id,String fkUserId);
 }

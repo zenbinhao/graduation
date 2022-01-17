@@ -99,7 +99,7 @@
       return {
         action:{
           subCourse: "drive/h5Student/insertCourseSub",
-          subExam: "drive/payment/examPay"
+          subExam: "drive/h5Student/examPay"
         },
         buttonList:[
           ["el-icon-date","约课","background-color: rgba(46,204,113,0.6);"],
@@ -169,6 +169,7 @@
         let params={
           payWay: this.payWay,
         }
+        // console.log()
         axios.post(this.action.subExam,params,{
           headers:{
             'authToken': window.localStorage.getItem("authToken")
