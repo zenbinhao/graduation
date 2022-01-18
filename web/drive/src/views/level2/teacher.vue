@@ -11,7 +11,7 @@
         <el-button type="danger" @click="deleteTableData()">批量删除</el-button>
       </div>
       <div class="operation-search">
-        <el-button type="success" @click="getList()">显示所有</el-button>
+        <el-button type="success" @click="search={};getList()">显示所有</el-button>
         <el-input v-model="search.name" placeholder="姓名回车搜索" @keydown.enter.native="searchList()"></el-input>
       </div>
     </div>
@@ -591,10 +591,10 @@
       searchList(){
         this.pageNum = 0
         this.getList()
-        this.search={
-          name:null,
-          phone:null
-        }
+        // this.search={
+        //   name:null,
+        //   phone:null
+        // }
       },
 
 

@@ -358,7 +358,7 @@
           chooseReTeacher:"drive/userinfo/chooseRe",
           resetPwd:"drive/userinfo/resetPwd/{ids}"
         },
-        planTableShow:["科目一","科目二","科目三","科目四","已毕业"],
+        planTableShow:["报名阶段","科目一","科目二","科目三","科目四","已毕业"],
         tableHead:[
           ["userName","姓名",90],
           ["sex","性别",50],
@@ -658,10 +658,10 @@
       searchList(){
         this.pageNum = 0
         this.getList()
-        this.search={
-          name:null,
-          phone:null
-        }
+        // this.search={
+        //   name:null,
+        //   phone:null
+        // }
       },
       load () {
         // 20替换总条数

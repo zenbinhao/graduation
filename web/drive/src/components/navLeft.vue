@@ -24,14 +24,14 @@
          <!-- <el-menu-item index="1-4">收费信息</el-menu-item> -->
          <!-- <el-menu-item index="1-5">考试信息</el-menu-item> -->
      </el-submenu>
-     <el-submenu index="3">
+     <el-submenu index="2">
        <template slot="title">
          <i class="el-icon-s-order"></i>
          <span slot="title">记录认定</span>
        </template>
-       <el-menu-item index="3-1" @click="routerToManager(4)">收费信息认定</el-menu-item>
-       <el-menu-item index="3-2" @click="routerToManager(5)">教练员排课记录</el-menu-item>
-       <el-menu-item index="1-4" @click="routerToManager(6)">考后认定</el-menu-item>
+       <el-menu-item index="2-1" @click="routerToManager(4)">收费信息认定</el-menu-item>
+       <el-menu-item index="2-2" @click="routerToManager(5)">教练员排课记录</el-menu-item>
+       <el-menu-item index="2-3" @click="routerToManager(6)">考后认定</el-menu-item>
      </el-submenu>
      <!-- <el-submenu index="4">
        <template slot="title">
@@ -51,7 +51,7 @@
     //数据存放
     data() {
       return {
-        routerList:["/Home","/Student","/Teacher","Exam","/Payment","/CourseRecord"],
+        routerList:["/Home","/Student","/Teacher","Exam","/Payment","/CourseRecord","/PassExam"],
       }
     },
     //方法函数存放

@@ -12,6 +12,7 @@ import TheStudent from '@/views/H5Student.vue'
 import TheTeacher from '@/views/H5Teacher.vue'
 import Operation from '@/views/h5leve2/operation.vue'
 import Person from '@/views/h5leve2/person.vue'
+import PassExam from '@/views/level2/passExam.vue'
 
 Vue.use(Router)
 
@@ -85,7 +86,11 @@ export default new Router({
           path: '/Exam',
           name: 'Exam',
           component: Exam
-        },
+        },{
+          path: '/PassExam',
+          name: 'PassExam',
+          component: PassExam
+        }
       ]
     },
   ]

@@ -1,166 +1,106 @@
 <template>
-  <div>
-    home
-  </div>
-<!--  <div class="home-box">
-    <div class="operation">
-      <div>
-        <el-button type="primary">录入信息</el-button>
-        <el-button type="danger">批量删除</el-button>
-      </div>
-      <div>
-        <el-input v-model="search" placeholder="请输入内容回车搜索"></el-input>
+  <div class="news-box">
+    <!-- <p>消息面板</p> -->
+    <div class="news-info">
+      <el-badge :value="viewDelExam.length==0?'':viewDelExam.length" class="item">
+        <el-button size="small" @click="routerTo(0)">点我跳转——》约考信息处理</el-button>
+      </el-badge>
+      <el-divider content-position="left">未处理信息</el-divider>
+      <!-- <p>&nbsp;</p> -->
+      <div class="news-info-box">
+        <span v-for="(obj,index) in viewDelExam" :key="index">
+          姓名为：
+          {{obj.userName}}
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          &nbsp;
+        </span>
       </div>
     </div>
-      <el-table
-        :data="tableData"
-        border
-        style="width: 100%">
-        <el-table-column
-          fixed
-          prop="date"
-          label="日期"
-          width="150">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="姓名"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="province"
-          label="省份"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="city"
-          label="市区"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="address"
-          label="地址"
-          width="300">
-        </el-table-column>
-        <el-table-column
-          prop="zip"
-          label="邮编"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="zip"
-          label="邮编"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="zip"
-          label="邮编"
-          width="120">
-        </el-table-column>
-        <el-table-column
-          prop="zip"
-          label="邮编"
-          width="120">
-        </el-table-column>
-       <el-table-column
-          fixed="right"
-          label="操作"
-          width="100">
-          <template slot-scope="scope">
-            <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-            <el-button type="text" size="small">编辑</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="block">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage4"
-          :page-sizes="[100, 200, 300, 400]"
-          :page-size="100"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="400">
-        </el-pagination>
+    <div class="news-info">
+      <el-badge :value="viewPassExam.length==0?'':viewPassExam.length" class="warning">
+        <el-button size="small"  @click="routerTo(1)">点我跳转——》考试通过认定</el-button>
+      </el-badge>
+      <el-divider content-position="left">未处理信息</el-divider>
+      <!-- <p>&nbsp;</p> -->
+      <div class="news-info-box">
+        <span v-for="(obj,index) in viewPassExam" :key="index">
+          姓名为：
+          {{obj.userName}}
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          &nbsp;
+        </span>
       </div>
-      <p>&nbsp;</p>
-  </div> -->
+    </div>
+    <div class="news-info">
+      <el-badge :value="viewPayment.length==0?'':viewPayment.length" class="item" type="primary">
+        <el-button size="small" @click="routerTo(2)">点我跳转——》缴费信息认定</el-button>
+      </el-badge>
+      <el-divider content-position="left">未处理信息</el-divider>
+      <!-- <p>&nbsp;</p> -->
+      <div class="news-info-box">
+        <span v-for="(obj,index) in viewPayment" :key="index">
+          姓名为：
+          {{obj.userName}}
+          &nbsp;
+          &nbsp;
+          &nbsp;
+          &nbsp;
+        </span>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+  import axios from 'axios'
   export default {
     name: "",
     //数据存放
     data() {
       return {
-        search: "",
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1517 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1519 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1516 弄',
-          zip: 200333
-        },{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1516 弄',
-          zip: 200333
-        },{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1516 弄',
-          zip: 200333
-        },{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1516 弄',
-          zip: 200333
-        },{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1516 弄',
-          zip: 200333
+        action: {
+          selectList: "drive/view/",
         },
-        ]
+        tableData: {},
+        headers:{
+          authToken: '',
+        },
+        viewDelExam:[],
+        viewPassExam:[],
+        viewPayment:[],
+        routerList:["/Exam","/PassExam","/Payment"],
+        search:'',
       }
     },
     //方法函数存放
     methods: {
+      getList(){
+        this.headers.authToken = window.localStorage.getItem("authToken")
+        axios.post(this.action.selectList,null,{
+          headers: {
+            'authToken': this.headers.authToken
+          }
+        }).then((res)=>{
+          // console.log(res.data.data.list)
+          this.viewDelExam=res.data.data.viewDelExam
+          this.viewPassExam=res.data.data.viewPassExam
+          this.viewPayment=res.data.data.viewPayment
+          console.log(this.tableData)
+          // this.total = res.data.data.total
+        })
+      },
+      routerTo(index){
 
+        this.$router.push(this.routerList[index])
+      }
     },
     //页面加载时
     mounted() {
-
+      this.getList()
     },
     //组件注册
     components: {
@@ -189,21 +129,27 @@
 </script>
 
 <style lang="scss" scoped="scoped">
-.home-box{
+.news-box{
   width: 100%;
   height: 100%;
-  // background-color: white;
-  .operation{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+  text-align: left;
+  .news-info{
+    border-radius: 5px;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
-    // .el-table::-webkit-scrollbar {
-    //   display: none;
-    // }
-  }
-  .block{
-    margin-top: 20px;
+
+    .news-info-box{
+      // text-decoration: none;
+      padding: 10px 0;
+      margin: 0 20px;
+      width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      // li{}
+    }
   }
 }
 </style>

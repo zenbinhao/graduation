@@ -1,6 +1,6 @@
 <template>
   <div class="student-box" v-loading.fullscreen.lock="fullscreenLoading">
-    <el-radio-group v-model="radio">
+    <el-radio-group v-model="radio" @change="getList()">
       <el-radio-button :label="1">科目一</el-radio-button>
       <el-radio-button :label="2">科目二</el-radio-button>
       <el-radio-button :label="3">科目三</el-radio-button>
@@ -33,7 +33,7 @@
         <!-- <el-button type="danger" @click="deleteTableData()">批量删除</el-button> -->
       </div>
       <div class="operation-search">
-        <el-button type="success" @click="getList()">显示所有</el-button>
+        <!-- <el-button type="success" @click="getList()">显示所有</el-button> -->
         <el-input v-model="search.name" placeholder="学员姓名回车搜索" @keydown.enter.native="searchList()"></el-input>
         <el-input v-model="search.phone" placeholder="学员手机号回车搜索" @keydown.enter.native="searchList()"></el-input>
       </div>
@@ -185,7 +185,7 @@
           ["email","邮箱",180],
           ["subject","考试科目",80],
           ["isResponse","是否受理",80],
-          ["isPass","考试通过认定",120],
+          // ["isPass","考试通过认定",120],
           ["content","处理内容",200],
           ["createUserName","创建人",80],
           ["gmtCreate","创建时间",160],
@@ -241,10 +241,10 @@
       searchList(){
         this.pageNum = 0
         this.getList()
-        this.search={
-          name:null,
-          phone:null
-        }
+        // this.search={
+        //   name:null,
+        //   phone:null
+        // }
       },
       updateCheck(index,state){
           console.log(index)
@@ -328,6 +328,7 @@
             })
           }
           this.fullscreenLoading = false
+          this.dialogVisible =false
         })
       },
       openDialog(){
