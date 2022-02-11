@@ -16,7 +16,7 @@
 
 
     <div class="person-operation">
-      <div class="person-operation-list" v-for="(obj,index) in operationList" :key="index">
+<!--     <div class="person-operation-list" v-for="(obj,index) in operationList" :key="index">
         <div>
         <i :class="obj[1]" style="font-size: 20px; font-weight: 800; color: #c9c9c9"></i>
         <span style="color: #707070;">
@@ -25,7 +25,7 @@
         </span>
         </div>
         <i class="el-icon-arrow-right"></i>
-      </div>
+      </div> -->
     </div>
 
 

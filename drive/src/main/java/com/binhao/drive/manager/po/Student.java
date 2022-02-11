@@ -7,7 +7,9 @@ import com.binhao.drive.common.po.BusinessPO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
+//@ConfigurationProperties(prefix = "ppp")
 @TableName("drive_student")
 @ApiModel("学员信息表")
 @Data

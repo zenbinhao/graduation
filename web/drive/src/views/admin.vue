@@ -26,7 +26,7 @@
       </el-aside>
       <el-container>
         <el-header>
-          <navTop></navTop>
+          <navTop v-on:func="closeSocket()"></navTop>
         </el-header>
         <el-main>
           <router-view/>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import navLeft from '@/components/navLeft.vue'
   import navTop from '@/components/navTop.vue'
   export default {
@@ -45,15 +46,36 @@
     data() {
       return {
         routerList:["/home"],
+        socket: null,
       }
     },
     //方法函数存放
     methods: {
-
+      notifyTo(data){
+        this.$notify({
+          title: '提示',
+          message: data,
+          duration: 0
+        })
+      },
+      closeSocket(){
+        this.socket.close()
+      },
     },
     //页面加载时
     mounted() {
-
+      let socket = new WebSocket("ws://47.102.36.69:8080/drive/webSocket/asset")
+      this.socket = socket
+      socket.onopen = function(){
+        console.log("Socket 已打开");
+        socket.send("消息发送测试(From Client)");
+      }
+      socket.onmessage=(res) =>{
+        this.notifyTo(res.data)
+      }
+      window.unload=function() {
+          socket.close();
+      }
     },
     //组件注册
     components: {

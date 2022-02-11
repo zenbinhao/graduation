@@ -29,9 +29,12 @@ import java.util.UUID;
 @RequestMapping("/file")
 public class FileUploadController extends BaseController {
 
+    // 本地映射路径
     @Value("${file.uploadFolder}")
     private String uploadFolder;
-
+    // 项目匹配访问路径
+    @Value("${file.staticAccessPath}")
+    private String staticAccessPath;
 
     @Transactional(rollbackFor = Exception.class)
     @AopOperation(
@@ -46,6 +49,8 @@ public class FileUploadController extends BaseController {
         }
         // 获取服务器位置下面的路径
         String path = uploadFolder;
+
+
         //创建一个io流
         File file = new File(path);
 
@@ -75,7 +80,7 @@ public class FileUploadController extends BaseController {
 
             try {
                 picture.transferTo(targetFile);
-                url = url + path + newFilename+";";
+                url = url + staticAccessPath + newFilename+";";
             } catch (Exception e) {
                 throw new BusinessException(ErrorCodeEnum.MAX_UPLOAD_SIZE);
             }

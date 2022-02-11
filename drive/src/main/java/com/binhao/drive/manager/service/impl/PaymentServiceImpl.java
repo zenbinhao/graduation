@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.binhao.drive.common.bo.SessionUser;
 import com.binhao.drive.common.po.BasePO;
+import com.binhao.drive.common.server.WebSocketServer;
 import com.binhao.drive.common.util.BeanUtil;
 import com.binhao.drive.common.vo.BusinessException;
 import com.binhao.drive.manager.dto.PaymentDTO;
@@ -28,6 +29,7 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -69,6 +71,11 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         Payment payment = new Payment();
         BeanUtil.copy(formDTO,payment);
         paymentMapper.insert(payment);
+        try {
+            WebSocketServer.BroadCastInfo("您有一条待确认的学员支付收款信息");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 //    @Override
@@ -108,5 +115,11 @@ public class PaymentServiceImpl extends ServiceImpl<PaymentMapper, Payment> impl
         paymentMapper.update(null,new UpdateWrapper<Payment>().lambda().set(Payment::getIsCheck,1).eq(BasePO::getId,id));
         //生成预约考试的信息
         examSubscribeService.insertExam(fkUserId);
+
+        try {
+            WebSocketServer.BroadCastInfo("您有一条待处理的约考信息");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

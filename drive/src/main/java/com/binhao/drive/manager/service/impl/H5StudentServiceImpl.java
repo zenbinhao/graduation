@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.binhao.drive.common.bo.SessionUser;
 import com.binhao.drive.common.po.BasePO;
+import com.binhao.drive.common.server.WebSocketServer;
 import com.binhao.drive.common.util.BeanUtil;
 import com.binhao.drive.common.util.SendEmailUtil;
 import com.binhao.drive.common.vo.BusinessException;
@@ -26,6 +27,7 @@ import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.concurrent.Future;
 
 @Service
@@ -109,5 +111,12 @@ public class H5StudentServiceImpl implements H5StudentService {
         payment.setIsCheck(0);
         payment.setFkUserId(sessionUser.getUserId());
         paymentMapper.insert(payment);
+
+        try {
+            WebSocketServer.BroadCastInfo("您有一条待处理的约考信息");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

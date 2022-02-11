@@ -1,6 +1,6 @@
 
 server:
-  port: 8088
+  port: 8080
   servlet:
     context-path: /drive
 servlet:
@@ -122,7 +122,10 @@ file:
   # 访问路径上的地址 localhost:8888/upload
   staticAccessPath: /upload/
   # 服务器本地路径
-  uploadFolder: E://upload/
+  # windows本地映射配置
+#  uploadFolder: E://upload/
+  # linux本地映射配置
+  uploadFolder: /uploadDrive/
   maxSize: 5MB
   countSize: 10MB
 

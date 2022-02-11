@@ -503,8 +503,13 @@
       handleAvatarSuccess (res, file) {
         // 部署需修改
         this.imageUrl = URL.createObjectURL(file.raw)
-        this.add.picture = 'http://localhost:8088/drive' + (res.data).substring(3)
-        this.alt.picture = 'http://localhost:8088/drive' + (res.data).substring(3)
+        //windows下部署环境
+        // this.add.picture = 'http://localhost:8088/drive' + (res.data).substring(3)
+        // this.alt.picture = 'http://localhost:8088/drive' + (res.data).substring(3)
+
+        //linux下部署环境
+        this.add.picture = 'http://47.102.36.69:8080/drive' + (res.data)
+        this.alt.picture = 'http://47.102.36.69:8080/drive' + (res.data)
       },
       altSubmitStudent (refName){
         this.$refs[refName].validate((valid) => {

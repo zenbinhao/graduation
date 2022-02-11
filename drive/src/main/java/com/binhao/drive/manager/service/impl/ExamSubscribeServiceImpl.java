@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.binhao.drive.common.em.ErrorCodeEnum;
 import com.binhao.drive.common.po.BasePO;
+import com.binhao.drive.common.server.WebSocketServer;
 import com.binhao.drive.common.util.BeanUtil;
 import com.binhao.drive.common.util.SendEmailUtil;
 import com.binhao.drive.common.vo.BusinessException;
@@ -27,6 +28,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;

@@ -27,6 +27,7 @@
         this.xsg_time = timestamp
       },
       outLogin(){
+        this.$emit('func')
         axios.get(this.action.loginOut,{
           headers:{
             'authToken': window.localStorage.getItem('authToken')
@@ -45,6 +46,7 @@
           }
           this.$router.push('/')
         })
+
       }
     },
     //页面加载时

@@ -201,6 +201,11 @@ public class CacheServiceImpl implements CacheService {
              * @Param [userid]
              * @return void
              **/
+//            Set<Object> keys = redisTemplate.keys("*account");
+
+            //TODO 思路2：由于账号是唯一性标识 可直接固定存储  直接顶替原来的k-v键值对 形成单点登录
+//            redisTemplate.opsForValue().set("账号+标识","Java转Json对象",30,TimeUnit.MINUTES);
+
         }else {
             /**
              * @Author zengbh

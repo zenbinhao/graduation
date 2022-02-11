@@ -89,8 +89,14 @@
             }else if(res.data.data.userType==2){
               this.$router.push('/TheTeacher')
             }else{
-              alert("警告")
+              this.$message({
+                type: 'error',
+                message: '警告'
+              })
             }
+          }else{
+            //未登录或者掉线则回登录页面
+            this.$router.push('/')
           }
         })
       }
